@@ -1,0 +1,12 @@
+# It should be complemented by a samples.tsv file that contains one row per sample.
+# The units.tsv file should contain the location of each project folder
+# (containing fastq files).
+
+# -- 1. Samples configuration -- #
+samples: "samples.tsv"
+out: "/data/gpfs-1/users/cofu10_c/scratch/P1812_SODAR/out"
+log: "/data/gpfs-1/users/cofu10_c/scratch/P1812_SODAR/log" 
+
+# -- Read input parameters -- #
+input_dir: "/data/gpfs-1/groups/ag_ludwig/work/P1812_20221228/demuxed"
+sample_id: "P1812"

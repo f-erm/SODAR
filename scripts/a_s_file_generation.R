@@ -5,7 +5,7 @@
 # -- Read input parameters -- #
 path <- snakemake@params[["input_dir"]]
 sample_ID <- snakemake@params[["sample_id"]]
-out <- snakemake@params[["output_dir"]]
+out <- snakemake@params[["out"]]
 
 # -- Read samples file -- #
 message("Reading samples.tsv")
@@ -13,8 +13,8 @@ samples <- read.table("samples.tsv", sep = "\t", header = T,  check.names=FALSE)
 
 # -- Obtain file names -- #
 message("Obtaining file names")
-file_names <- lapply( strsplit(list.files(path),split="_L0"), "[", 1)
-
+selected_files <- unlist(lapply(samples$ 'scATAC-seq samples', list.files(path, x)))
+file_names <- lapply( strsplit(selected_files,split="_L0"), "[", 1)
 
 # -- Generate a file -- #
 message("Generating a file")
