@@ -13,22 +13,32 @@ samples <- read.table("samples.tsv", sep = "\t", header = T,  check.names=FALSE)
 
 # -- Obtain file names -- #
 message("Obtaining file names")
-selected_files <- unlist(lapply(samples$ 'scATAC-seq samples', list.files(path, x)))
-file_names <- lapply( strsplit(selected_files,split="_L0"), "[", 1)
+selected_files <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
+file_names <- unique(unlist(lapply(strsplit(selected_files,split="[0-9]_S[0-9]"), "[", 1)))
+message(paste0(length(file_names), " unique file names detected."))
 
-# -- Generate a file -- #
-message("Generating a file")
-a <- data.frame("Sample Name" = samples$ 'scATAC-seq samples', 
-                "Protocol REF" = rep("Laboratory register archiving", dim(samples)[1]), 
-                "Parameter Value[Library ID]" = samples$ 'ID', 
+if(length(file_names) == dim(samples)[1]){
+	# -- Generate a file -- #
+	message("Generating a file")
+	a <- data.frame("Sample Name" = samples$ 'scATAC-seq samples',
+                "Protocol REF" = rep("Laboratory register archiving", dim(samples)[1]),
+                "Parameter Value[Library ID]" = samples$ 'ID',
                 "Parameter Value[Labregister Item ID]" = samples$ 'Lab Register ID',
                 "Parameter Value[Prep Date]" = samples$ 'Date',
                 "Parameter Value[Barcode Name]" = samples$ 'primer',
-                "Library Name" = file_names)
-write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", col.names = NA)
+                "Library Name" = file_names, check.names = FALSE)
+	write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", 
+		 quote = FALSE, row.names = FALSE)
+	# -- Generate s file -- #
+	message("Generating s file")
+	s <- data.frame("Source Name" = file_names,
+                "Sample Name" = samples$ 'scATAC-seq samples', check.names = FALSE)
+	write.table(s, file = file.path(out, paste0("s_", sample_ID, ".txt")), sep = "\t", 
+		quote = FALSE, row.names = FALSE)
+        message("Saving a and s files")
+        message("Done! :)")
+} else {
+message("Warning: there is no agreement between the Nº of files detected sample.txt metadata. The list.files function might not be working properly?")
+}
 
-# -- Generate s file -- #
-message("Generating s file")
-s <- data.frame("Source Name" = file_names, 
-                "Sample Name" = samples$ 'scATAC-seq samples')
-write.table(s, file = file.path(out, paste0("s_", sample_ID, ".txt")), sep = "\t", col.names = NA)
+
