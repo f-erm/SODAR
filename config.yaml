@@ -2,7 +2,7 @@
 # The units.tsv file should contain the location of each project folder
 # (containing fastq files).
 
-# -- 1. Samples configuration -- #
+# -- Samples configuration -- #
 samples: "samples.tsv"
 out: "/data/gpfs-1/users/cofu10_c/scratch/P1812_SODAR/out"
 log: "/data/gpfs-1/users/cofu10_c/scratch/P1812_SODAR/log" 
@@ -10,3 +10,11 @@ log: "/data/gpfs-1/users/cofu10_c/scratch/P1812_SODAR/log"
 # -- Read input parameters -- #
 input_dir: "/data/gpfs-1/groups/ag_ludwig/work/P1812_20221228/demuxed"
 sample_id: "P1812"
+
+# -- Resources configuration -- #
+resources:
+    default:
+        threads: 1
+        mem_mb: 8000
+        walltime: 480
+
