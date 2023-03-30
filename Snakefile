@@ -29,7 +29,8 @@ rule all:
         # The first rule should define the default target files
         # Subsequent target rules can be specified below. They should start with all_*.
         expand(["{OUTDIR}/a_{sample}.txt", 
-                "{OUTDIR}/s_{sample}.txt"], sample=samples['sample'], OUTDIR=OUTDIR)
+                "{OUTDIR}/s_{sample}.txt",
+                "{OUTDIR}/i_Investigation.txt"], sample=config['sample_id'], OUTDIR=OUTDIR)
 
 # Rule files
-include: "rules/general.smk"
+include: "rules/text_files.smk"
