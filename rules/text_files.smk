@@ -49,8 +49,9 @@ rule zip:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
         s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id'])
     output:
-        dir=expand("{OUTDIR}/{id}", OUTDIR = OUTDIR, id= config['sample_id']),
         zip=expand("{OUTDIR}/{id}.zip", OUTDIR = OUTDIR, id = config['sample_id'])
+    params:
+        dir=expand("{OUTDIR}/{id}", OUTDIR = OUTDIR, id= config['sample_id'])
     resources:
         mem_mb=get_resource("zip", "mem_mb"),
         walltime=get_resource("zip", "walltime")
@@ -62,8 +63,8 @@ rule zip:
         threads=get_resource("zip", "threads")
     shell:
         """
-        mkdir {output.dir}
-        mv -t {output.dir} {input.i} {input.a} {input.s} 
-        zip -r {output.zip} {output.dir}
+        mkdir {params.dir}
+        mv -t {params.dir} {input.i} {input.a} {input.s} 
+        zip -r -j {output.zip} {params.dir}
         """
 
