@@ -1,7 +1,6 @@
 import glob
 import os
 
-
 rule a_s_files:
     output:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
@@ -39,3 +38,25 @@ rule i_file:
         """
         sed -i 's/PXXXX/{input.sample_ID}/' {input.template} > {output.i}
         """
+
+rule zip:
+    input: 
+        i=expand("{OUTDIR}/i_Investigation.txt", OUTDIR=OUTDIR),
+        a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
+        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id'])
+    output:
+        zip=expand("{OUTDIR}/{id}.zip", OUTDIR = OUTDIR, id = config['sample_id'])
+    resources:
+        mem_mb=get_resource("zip", "mem_mb"),
+        walltime=get_resource("zip", "walltime")
+    log:
+        "{}/zip.log".format(LOGDIR)
+    benchmark:
+        "{}/zip.bmk".format(LOGDIR)
+    threads:
+        threads=get_resource("zip", "threads")
+    shell:
+        """
+        gzip {input.i} {input.a} {input.s} > {output.zip}
+        """
+
