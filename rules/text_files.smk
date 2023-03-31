@@ -9,6 +9,7 @@ rule a_s_files:
         mem_mb=get_resource("a_s_files", "mem_mb"),
         walltime=get_resource("a_s_files", "walltime")
     params:
+        samples = config["samples"],
         input_dir = config["input_dir"],
         sample_id = config["sample_id"],
         out = config["out"]

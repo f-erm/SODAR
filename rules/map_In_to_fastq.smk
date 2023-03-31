@@ -8,6 +8,7 @@ rule map_In_to_fastq:
         mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime")
     params:
+        samples = config["samples"],
         input_dir = config["input_dir"],
         out = config["out"]
     log:

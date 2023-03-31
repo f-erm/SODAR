@@ -5,10 +5,11 @@
 # -- Read input parameters -- #
 path <- snakemake@params[["input_dir"]]
 out <- snakemake@params[["out"]]
+samples <- snakemake@params[["samples"]]
 
 # -- Read samples file -- #
 message("Reading samples.tsv")
-samples <- read.table("samples.tsv", sep = "\t", header = T, check.names=FALSE)
+samples <- read.table(samples, sep = "\t", header = T, check.names=FALSE)
 
 # -- Read files in fastq folder -- #
 message("Reading fastq files")
