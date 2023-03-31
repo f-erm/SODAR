@@ -16,12 +16,12 @@ message("Reading fastq files")
 fastq_files <- list.files(path, pattern = "fastq.gz")
 # -- Create final dataframe -- #
 map_In_to_fastq <- data.frame("#LibraryName" = fastq_files,
-                              "FastqFilenameWithNoPath" = fastq_files,
-                               check.names = FALSE)
+                             "FastqFilenameWithNoPath" = fastq_files,
+                             check.names = FALSE)
                                                   
 for(x in samples$ 'scATAC-seq samples'){
   map_In_to_fastq[grep(x, fastq_files), "#LibraryName"] <- x
 }
-message("Saving map_In_to_fastq file")                
-write.csv(map_In_to_fastq, file = file.path(out, "map_In_to_fastq.csv"),
-          quote = FALSE, row.names = FALSE)
+message("Saving map_ln_to_fastq file")                
+write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
+          sep=",", quote = FALSE, row.names = FALSE)#, col.names=FALSE)
