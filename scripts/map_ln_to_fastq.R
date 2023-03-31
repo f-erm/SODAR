@@ -24,4 +24,4 @@ for(x in samples$ 'scATAC-seq samples'){
 }
 message("Saving map_ln_to_fastq file")                
 write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
-          sep=",", quote = FALSE, row.names = FALSE)#, col.names=FALSE)
+          sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
