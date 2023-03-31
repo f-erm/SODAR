@@ -21,11 +21,9 @@ rule all:
     input:
         # The first rule should define the default target files
         # Subsequent target rules can be specified below. They should start with all_*.
-        expand([
-                #"{OUTDIR}/a_{sample}.txt", 
-                #"{OUTDIR}/s_{sample}.txt",
-                #"{OUTDIR}/i_Investigation.txt",
-                "{OUTDIR}/{sample}.zip"], sample=config['sample_id'], OUTDIR=OUTDIR)
+        expand(["{OUTDIR}/{sample}.zip", "{OUTDIR}/map_In_to_fastq.csv"], 
+               sample=config['sample_id'], OUTDIR=OUTDIR)
 
 # Rule files
 include: "rules/text_files.smk"
+include: "rules/map_In_to_fastq.smk"
