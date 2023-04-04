@@ -22,9 +22,7 @@ rule all:
         # The first rule should define the default target files
         # Subsequent target rules can be specified below. They should start with all_*.
         expand("{OUTDIR}/{sample}.zip", sample = config['sample_id'], OUTDIR = OUTDIR), 
-        directory(expand("{landing}/{sample}/fastq", 
-                landing = config['landing_dir'], sample = config['sample_id'])),
-        expand("{landing}/{sample}/input/fastq/map_ln_to_fastq.csv", 
+        expand("{landing}/{sample}/fastq/landing.finish", 
                 landing = config['landing_dir'], sample = config['sample_id'])
 
 # Rule files

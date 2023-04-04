@@ -14,14 +14,12 @@ samples <- read.table(samples, sep = "\t", header = T, check.names=FALSE)
 # -- Read files in fastq folder -- #
 message("Reading fastq files")
 fastq_files <- list.files(path, pattern = "fastq.gz")
+library_name <- unique(unlist(lapply(strsplit(fastq_files, split="_S[0-9]"), "[", 1)))
 # -- Create final dataframe -- #
-map_In_to_fastq <- data.frame("#LibraryName" = fastq_files,
+map_In_to_fastq <- data.frame("#LibraryName" = library_name,
                              "FastqFilenameWithNoPath" = fastq_files,
                              check.names = FALSE)
                                                   
-for(x in samples$ 'scATAC-seq samples'){
-  map_In_to_fastq[grep(x, fastq_files), "#LibraryName"] <- x
-}
 message("Saving map_ln_to_fastq file")                
 write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
           sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)

@@ -15,7 +15,7 @@ samples <- read.table(samples, sep = "\t", header = T,  check.names=FALSE)
 # -- Obtain file names -- #
 message("Obtaining file names")
 selected_files <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
-file_names <- unique(unlist(lapply(strsplit(selected_files,split="[0-9]_S[0-9]"), "[", 1)))
+file_names <- unique(unlist(lapply(strsplit(selected_files,split="_S[0-9]"), "[", 1)))
 message(paste0(length(file_names), " unique file names detected."))
 
 if(length(file_names) == dim(samples)[1]){

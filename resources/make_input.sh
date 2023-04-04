@@ -15,4 +15,3 @@ do
   ln -sF $path_to_fastq"$fastq".md5 "$fastq".md5
   cd $out
 done < $path_to_csv/map_ln_to_fastq.csv
-
