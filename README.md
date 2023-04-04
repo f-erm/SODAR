@@ -39,7 +39,7 @@ Before executing the pipeline, the users must configure it according to their sa
 
 #### **a. config.yaml**
 
-This is the pipeline configuration file, where you can tune all the available parameters to customise the uploading of the samples. An example file ([config-example.yaml)](https://github.com/cfusterot/SODAR/blob/main/config-example.yaml)) is included in the repository. Rename it to `config.yaml` and edit its contents. 
+This is the pipeline configuration file, where you can tune all the available parameters to customise the uploading of the samples. An example file ([config-example.yaml)](https://github.com/cfusterot/SODAR/blob/main/config-example.yaml)) is included in the repository. Rename it to `config.yaml` and edit its contents.
 
 
 | **Field name** 	| **Description**                  |
