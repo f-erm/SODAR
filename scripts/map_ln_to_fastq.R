@@ -16,10 +16,13 @@ message("Reading fastq files")
 fastq_files <- list.files(path, pattern = "fastq.gz")
 library_name <- unique(unlist(lapply(strsplit(fastq_files, split="_S[0-9]"), "[", 1)))
 # -- Create final dataframe -- #
-map_In_to_fastq <- data.frame("#LibraryName" = library_name,
-                             "FastqFilenameWithNoPath" = fastq_files,
-                             check.names = FALSE)
-                                                  
+map_In_to_fastq <- data.frame("#LibraryName" = fastq_files,
+                              "FastqFilenameWithNoPath" = fastq_files,
+                              check.names = FALSE)
+for(name in library_name){
+  map_In_to_fastq[grep(name, fastq_files), "#LibraryName"] <- name 
+}
+
 message("Saving map_ln_to_fastq file")                
 write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
           sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
