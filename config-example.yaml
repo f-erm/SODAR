@@ -13,6 +13,7 @@ sample_id: "P1812"
 
 # -- Landing zone parameters -- #
 landing_dir: "/data/gpfs-1/projects/ludwig_cubi/work"
+input_format: "folder" # choose between "folder" or "list"
 
 # -- Resources configuration -- #
 resources:

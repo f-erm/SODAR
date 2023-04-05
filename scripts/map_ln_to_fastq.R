@@ -6,6 +6,7 @@
 path <- snakemake@params[["input_dir"]]
 out <- snakemake@params[["out"]]
 samples <- snakemake@params[["samples"]]
+input_format <- snakemake@params[["input_format"]]
 
 # -- Read samples file -- #
 message("Reading samples.tsv")
@@ -13,8 +14,18 @@ samples <- read.table(samples, sep = "\t", header = T, check.names=FALSE)
 
 # -- Read files in fastq folder -- #
 message("Reading fastq files")
-fastq_files <- list.files(path, pattern = "fastq.gz")
-library_name <- unique(unlist(lapply(strsplit(fastq_files, split="_S[0-9]"), "[", 1)))
+if (input_format == "folder") {
+  selected_folders <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
+  fastq_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
+  library_name <- list.files(path)[list.files(path) != "Undetermined"]
+} else if (input_format == "list"){
+  fastq_files <- list.files(path, pattern = "fastq.gz")
+  library_name <- unique(unlist(lapply(strsplit(fastq_files, split="_S[0-9]"), "[", 1)))
+# -- Create final dataframe -- #
+} else {
+  message("Ola, seniora, ké ase?")
+}
+
 # -- Create final dataframe -- #
 map_In_to_fastq <- data.frame("#LibraryName" = fastq_files,
                               "FastqFilenameWithNoPath" = fastq_files,

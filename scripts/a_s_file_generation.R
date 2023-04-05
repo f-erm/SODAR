@@ -7,14 +7,23 @@ path <- snakemake@params[["input_dir"]]
 sample_ID <- snakemake@params[["sample_id"]]
 out <- snakemake@params[["out"]]
 samples <- snakemake@params[["samples"]]
+input_format <- snakemake@params[["input_format"]]
 
 # -- Read samples file -- #
 message("Reading samples.tsv")
 samples <- read.table(samples, sep = "\t", header = T,  check.names=FALSE)
 
 # -- Obtain file names -- #
-message("Obtaining file names")
-selected_files <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
+ message("Obtaining file names")
+if (input_format == "folder") {
+  selected_folders <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
+  selected_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
+} else if (input_format == "list") {
+  selected_files <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
+} else {
+  message("The input format wasn't recognised. Please choose between 'folder' or 'list'")
+}
+
 file_names <- unique(unlist(lapply(strsplit(selected_files,split="_S[0-9]"), "[", 1)))
 message(paste0(length(file_names), " unique file names detected."))
 
@@ -39,7 +48,7 @@ if(length(file_names) == dim(samples)[1]){
         message("Saving a and s files")
         message("Done! :)")
 } else {
-message("Warning: there is no agreement between the Nº of files detected sample.txt metadata. The list.files function might not be working properly?")
+  warning("There is no agreement between the Nº of files detected sample.txt metadata. The list.files function might not be working properly?")
 }
 
 
