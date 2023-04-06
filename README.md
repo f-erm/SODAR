@@ -1,5 +1,5 @@
 # SODAR
-This snakemake pipeline aims at facilitating the upload of samples to the **SODAR** platform.
+This snakemake pipeline aims at facilitating the uploading of samples to the **SODAR** platform.
 
 <img src="resources/img/sodar_cacaolat_logo.png" width="100">
 
@@ -9,12 +9,12 @@ This snakemake pipeline aims at facilitating the upload of samples to the **SODA
 
 ## Setup
 
-For setting up the pipeline, three configuration files need to be modified. A general description of these files follows. See the *Usage* section for more details.
+For setting up the pipeline, three configuration files need to be modified. See the *Usage* section for more details.
 
 ### Configuration files
 
 * **config.yaml** contains all pipeline parameters.
-* **samples.tsv**: contains metadata based on the libraries_for_sequencing file from AGLudwig. An example file can be downloaded. Not all columns are necessary.
+* **samples.tsv**: contains metadata annotations. An example file can be downloaded, have in mind not all columns will be necessary.
 
 # Usage
 
@@ -22,8 +22,7 @@ For setting up the pipeline, three configuration files need to be modified. A ge
 
 **SODAR** requires the installation of the conda package manager in order to work. Please install conda by following the [bioconda installation instructions](http://bioconda.github.io/user/install.html#install-conda). In addition, it is essential to install Snakemake; following the steps in the [Snakemake documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
-To run the pipeline, the user needs to create the conda environments first, which will take some minutes.
-This step is done automatically using this command:
+To run the pipeline, the user needs to create the conda environments first, which will take some minutes. This step is done automatically using the following command:
 
     snakemake --use-conda --conda-create-envs-only --conda-frontend mamba
 
@@ -35,11 +34,11 @@ Use git clone command to create a local copy.
 
 ### 3. Configure the pipeline.
 
-Before executing the pipeline, the users must configure it according to their samples. To do this, they must fill these files:
+Before executing the pipeline, the users must configure it according to their samples.
 
 #### **a. config.yaml**
 
-This is the pipeline configuration file, where you can tune all the available parameters to customise the uploading of the samples. An example file ([config-example.yaml)](https://github.com/cfusterot/SODAR/blob/main/config-example.yaml)) is included in the repository. Rename it to `config.yaml` and edit its contents.
+This is the pipeline configuration file, where you can tune all the available parameters to customise the uploading of the samples. An example file ([config-example.yaml)](https://github.com/cfusterot/SODAR/blob/main/config-example.yaml) is included in the repository. Rename it to `config.yaml` and edit its contents.
 
 
 | **Field name** 	| **Description**                  |
@@ -55,7 +54,7 @@ This is the pipeline configuration file, where you can tune all the available pa
 
 This table contains the name of each sample and the experimental condition it belongs to.
 
-An example file ([samples-example.tsv)](https://github.com/cfusterot/SODAR/blob/main/samples-example.tsv)) is included in the repository. Rename it to `samples.tsv` and edit its contents. Mandatory columns include:
+An example file ([samples-example.tsv)](https://github.com/cfusterot/SODAR/blob/main/samples-example.tsv) is included in the repository. Rename it to `samples.tsv` and edit its contents. Mandatory columns include:
 * scATAC-seq samples
 * ID
 * Lab Register ID
@@ -64,7 +63,7 @@ An example file ([samples-example.tsv)](https://github.com/cfusterot/SODAR/blob/
 
 ### 4. Run the pipeline.
 
-Once the pipeline is configured and conda environments are created, the user just needs to run scASAP.
+Once the pipeline is configured and conda environments are created, the user just needs to run i**SODAR** as follows:
 
     snakemake --use-conda --jobs 3
 
