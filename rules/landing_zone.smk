@@ -31,8 +31,9 @@ if config["input_format"] in ["folder"]:
             """
             mkdir -p {output.folder}
             mkdir -p {output.fastq}
+            #rsync -av --progress {params.input_dir}/*/*.fastq.gz {output.fastq} --exclude Undetermined*
             cp {params.input_dir}/*/*.fastq.gz {output.fastq}
-            rm -r {output.fastq}/Undertermined*
+            #rm -r {output.fastq}/Undertermined*
             mv {input.sh} {params.landing}/{params.sample_id}/fastq
             mv {input.csv} {params.landing}/{params.sample_id}/fastq
             bash {params.landing}/{params.sample_id}/fastq/make_input.sh

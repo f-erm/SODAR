@@ -28,7 +28,8 @@ rule make_input:
         sh="{}/make_input.sh".format(OUTDIR)
     params:
         sample_ID=config['sample_id'],
-        template="resources/make_input.sh"
+        template="resources/make_input.sh",
+        landing_dir=config['landing_dir']
     resources:
         mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime")
@@ -41,5 +42,6 @@ rule make_input:
     shell:
         """
         sed 's/PXXXX/{params.sample_ID}/g' {params.template} > {output.sh}
+        sed -i 's#/fast/home/projects/ludwig_cubi/work#{params.landing_dir}#g' {output.sh}
         """
 
