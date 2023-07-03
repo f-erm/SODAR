@@ -16,6 +16,8 @@ properties:
     type: string
   sample_id:
     type: string
+  sample_type:
+    type: string
 
 # entries that have to be in the config file for successful validation
 required:
@@ -24,3 +26,4 @@ required:
   - log
   - input_dir
   - sample_id
+  - sample_type

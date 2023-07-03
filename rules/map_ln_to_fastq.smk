@@ -11,6 +11,7 @@ rule map_In_to_fastq:
         samples = config["samples"],
         input_dir = config["input_dir"],
         input_format = config["input_format"],
+        sample_type = config["sample_type"],
         out = config["out"]
     log:
         "{}/map_ln_to_fastq.log".format(LOGDIR)

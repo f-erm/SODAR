@@ -73,5 +73,6 @@ elif  config["input_format"] in ["list"]:
             cp {params.input_dir}/*.fastq.gz {output.fastq}
             mv {input.sh} {params.landing}/{params.sample_id}/fastq
             mv {input.csv} {params.landing}/{params.sample_id}/fastq
-            bash {params.landing}/{params.sample_id}/fastq/make_input.sh                                                                    touch {params.landing}/{params.sample_id}/fastq/landing.finish
+            bash {params.landing}/{params.sample_id}/fastq/make_input.sh
+            touch {params.landing}/{params.sample_id}/fastq/landing.finish
             """

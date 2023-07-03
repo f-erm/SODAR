@@ -7,15 +7,29 @@ path <- snakemake@params[["input_dir"]]
 out <- snakemake@params[["out"]]
 samples <- snakemake@params[["samples"]]
 input_format <- snakemake@params[["input_format"]]
+sample_type <- snakemake@params[["sample_type"]]
 
 # -- Read samples file -- #
 message("Reading samples.tsv")
 samples <- read.table(samples, sep = "\t", header = T, check.names=FALSE)
 
+# -- Select technology type -- #
+if (sample_type == "scRNA-seq"){
+    pattern <- "scRNA-seq samples"
+} else if (sample_type == "scATAC-seq"){
+    pattern <- 'scATAC-seq samples'
+} else if(sample_type == "Multiome-GEX"){
+    pattern <- "Multiome-GEX samples"
+} else if (sample_type == "multiome"){
+    pattern <- "samples"
+} else {
+    message("Sample type not regognise. Please choose between: 'scRNA-seq', 'scATAC-seq', 'samples'")
+}
+
 # -- Read files in fastq folder -- #
 message("Reading fastq files")
 if (input_format == "folder") {
-  selected_folders <- unlist(lapply(samples$ 'scATAC-seq samples', function(x) list.files(path, x)))
+  selected_folders <- unlist(lapply(samples[,pattern], function(x) list.files(path, x)))
   fastq_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
   library_name <- list.files(path)[list.files(path) != "Undetermined"]
 } else if (input_format == "list"){

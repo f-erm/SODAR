@@ -1,4 +1,5 @@
 .Rhistory
+.snakemake/
 resources/.DS_Store
 config.yaml
 samples.tsv

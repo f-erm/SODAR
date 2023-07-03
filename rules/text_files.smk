@@ -13,6 +13,7 @@ rule a_s_files:
         input_dir = config["input_dir"],
         input_format = config["input_format"],
         sample_id = config["sample_id"],
+        sample_type = config["sample_type"],
         out = config["out"]
     log:
         "{}/a_s_files.log".format(LOGDIR)
@@ -48,10 +49,10 @@ rule i_file:
 rule zip:
     input: 
         i=expand("{OUTDIR}/i_Investigation.txt", OUTDIR=OUTDIR),
-        a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
-        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id'])
+        a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id= config['sample_id']),
+        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id= config['sample_id'])
     output:
-        zip=expand("{OUTDIR}/{id}.zip", OUTDIR = OUTDIR, id = config['sample_id'])
+        zip=expand("{OUTDIR}/{id}.zip", OUTDIR = OUTDIR, id= config['sample_id'])
     params:
         dir=expand("{OUTDIR}/{id}", OUTDIR = OUTDIR, id= config['sample_id'])
     resources:
@@ -65,8 +66,7 @@ rule zip:
         threads=get_resource("zip", "threads")
     shell:
         """
-        mkdir {params.dir}
+        mkdir -p {params.dir}
         mv -t {params.dir} {input.i} {input.a} {input.s} 
         zip -r -j {output.zip} {params.dir}
         """
-
