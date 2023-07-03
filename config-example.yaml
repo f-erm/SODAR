@@ -14,6 +14,7 @@ sample_id: "P1812"
 # -- Landing zone parameters -- #
 landing_dir: "/data/gpfs-1/projects/ludwig_cubi/work"
 input_format: "folder" # choose between "folder" or "list"
+sample_type: "Multiome-GEX" # choose between "Multiome-GEX", "scRNA-seq" #"multiome", "scATAC-seq" 
 
 # -- Resources configuration -- #
 resources:
