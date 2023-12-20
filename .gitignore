@@ -3,4 +3,5 @@
 resources/.DS_Store
 config.yaml
 samples.tsv
+samples.txt
 config_files/

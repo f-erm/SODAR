@@ -1,9 +1,0 @@
-Multiome-GEX samples	ID	Lab Register ID	Date	Total nM of Lib	Sample (µl)	EB buffer (µl)	Loading conc (nM)	Conc ratio to 10 nM	(11ul min)	pooling	Loaded conc	~ Wanted M reads	M reads not normalized	Actual Reads (Normalized)	primer	Reads (in M)
-MELAS_11555_rep1_mtMultiome_GEX	251		10/03/2023	82,62	4	13	19,44	1,94	17	10	2,1	200		179,8	Dual Index TT Set A: D7	205
-MELAS_11555_rep2_mtMultiome_GEX	252		10/03/2023	79,29	4	13	18,66	1,87	17	10	2	200		172,6	Dual Index TT Set A: E7	174
-ND5_15445_rep1_mtMultiome_GEX	253		10/03/2023	82,92	4	14	18,43	1,84	18	12	2,4	200		204,5	Dual Index TT Set A: F7	253
-ND5_15445_rep2_mtMultiome_GEX	254		10/03/2023	74,1	4	12	18,53	1,85	16	12	2,4	200		205,6	Dual Index TT Set A: G7	286
-MELAS_15448_rep1_mtMultiome_GEX	255		10/03/2023	82,95	4	14	18,43	1,84	18	12	2,4	200		204,6	Dual Index TT Set A: H7	336
-MELAS_15448_rep2_mtMultiome_GEX	256		10/03/2023	94,8	4	16	18,96	1,9	20	12	2,5	200		210,5	Dual Index TT Set A: A8	284
-ND5_15060_rep1_mtMultiome_GEX	285		10/03/2023	70,2	4	11	18,72	1,87	15	12	2,4	200		207,8	Dual Index TT Set A: D8	200
-ND5_15060_rep2_mtMultiome_GEX	286		10/03/2023	87	4	14	19,33	1,93	18	12	2,5	200		214,6	Dual Index TT Set A: E8	208
