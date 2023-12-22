@@ -69,5 +69,5 @@ rule zip:
         mkdir -p {params.dir}
         mv -t {params.dir} {input.i} {input.a} {input.s} 
         rm -fv {params.dir}/.snakemake_timestamp
-        zip -r -j {output.zip} {params.dir}
+        zip -r --junk-path {output.zip} {params.dir}  
         """

@@ -28,6 +28,7 @@ rule make_input:
     output:
         sh="{}/make_input.sh".format(OUTDIR)
     params:
+        out = config["out"],
         sample_ID=config['sample_id'],
         template="resources/make_input.sh",
         landing_dir=config['landing_dir']
@@ -42,7 +43,8 @@ rule make_input:
         threads=get_resource("default", "threads")
     shell:
         """
-        sed 's/PXXXX/{params.sample_ID}/g' {params.template} > {output.sh}
+        cp {params.template} {params.out}/
+        sed -i 's#/fast/home/projects/ludwig_cubi/fastq#{params.landing_dir}/fastq#g' {output.sh}
         sed -i 's#/fast/home/projects/ludwig_cubi/work#{params.landing_dir}#g' {output.sh}
         """
 

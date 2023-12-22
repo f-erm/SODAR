@@ -44,9 +44,11 @@ if (input_format == "folder") {
 map_In_to_fastq <- data.frame("#LibraryName" = fastq_files,
                               "FastqFilenameWithNoPath" = fastq_files,
                               check.names = FALSE)
+                          
 for(name in library_name){
-  map_In_to_fastq[grep(name, fastq_files), "#LibraryName"] <- name 
+  map_In_to_fastq[grep(paste0(name, "_S"), fastq_files), "#LibraryName"] <- name
 }
+
 
 message("Saving map_ln_to_fastq file")                
 write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),

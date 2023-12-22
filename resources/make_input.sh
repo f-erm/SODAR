@@ -1,13 +1,13 @@
 #!/bin/bash
 
-path_to_fastq="/fast/home/projects/ludwig_cubi/work/PXXXX/fastq/"
-out="/fast/home/projects/ludwig_cubi/work/PXXXX/input/"
-path_to_csv="/fast/home/projects/ludwig_cubi/work/PXXXX/fastq/"
+path_to_fastq="/fast/home/projects/ludwig_cubi/fastq/"
+out="/fast/home/projects/ludwig_cubi/work/input/"
+path_to_csv="/fast/home/projects/ludwig_cubi/work/fastq/"
 
 mkdir -p $out
 cd $out
 while IFS=',' read library_name fastq
-do 
+do
   md5sum $path_to_fastq$fastq > $path_to_fastq"$fastq".md5
   mkdir -p $library_name/fastq
   cd $library_name/fastq
