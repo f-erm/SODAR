@@ -29,7 +29,7 @@ if (sample_type == "scRNA-seq"){
 # -- Read files in fastq folder -- #
 message("Reading fastq files")
 if (input_format == "folder") {
-  selected_folders <- unlist(lapply(samples[,pattern], function(x) list.files(path, x)))
+  selected_folders <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
   fastq_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
   library_name <- list.files(path)[list.files(path) != "Undetermined"]
 } else if (input_format == "list"){
