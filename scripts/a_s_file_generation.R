@@ -30,10 +30,10 @@ if (sample_type == "scRNA-seq"){
 # -- Obtain file names -- #
  message("Obtaining file names")
 if (input_format == "folder") {
-  selected_folders <- unlist(lapply(samples[,pattern], function(x) list.files(path, x)))
+  selected_folders <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
   selected_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
 } else if (input_format == "list") {
-  selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, x)))
+  selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
 } else {
   message("The input format wasn't recognised. Please choose between 'folder' or 'list'")
 }
