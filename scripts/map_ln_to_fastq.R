@@ -35,6 +35,10 @@ if (input_format == "folder") {
 } else if (input_format == "list"){
   fastq_files <- list.files(path, pattern = "fastq.gz")
   library_name <- unique(unlist(lapply(strsplit(fastq_files, split="_S[0-9]"), "[", 1)))
+} else if (input_format == "recursive") {
+  all_files <- list.files(path, pattern = "fastq\\.gz$", recursive = TRUE, full.names = TRUE)
+  fastq_files <- all_files[!grepl("/catfiles/|$)", all_files)]  
+  library_name <- list.files(path)[list.files(path) != "Undetermined"] #TODO this works for ICI, might need to be adjusted 
 # -- Create final dataframe -- #
 } else {
   message("Ola, seniora, ké ase?")

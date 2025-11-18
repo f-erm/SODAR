@@ -34,6 +34,9 @@ if (input_format == "folder") {
   selected_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
 } else if (input_format == "list") {
   selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
+} else if (input_format == "recursive") {
+  all_files <- list.files(path, pattern = "fastq\\.gz$", recursive = TRUE, full.names = TRUE)
+  selected_files <- all_files[!grepl("/catfiles/|$)", all_files)]
 } else {
   message("The input format wasn't recognised. Please choose between 'folder' or 'list'")
 }
