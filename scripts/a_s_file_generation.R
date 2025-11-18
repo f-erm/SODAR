@@ -66,5 +66,7 @@ if(length(file_names) == dim(samples)[1]){
         message("Done! :)")
 } else {
   warning("There is no agreement between the Nº of files detected sample.txt metadata. The list.files function might not be working properly?")
+  message("Detected file names: ", paste(file_names, collapse = ", "))
+  message("Detected sample names: ", paste(samples[,pattern], collapse = ", "))
 }
 
