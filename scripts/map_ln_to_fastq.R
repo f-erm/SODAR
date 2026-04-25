@@ -23,7 +23,7 @@ if (sample_type == "scRNA-seq"){
 } else if (sample_type %in% c("multiome", "scenith", "other")){
     pattern <- "samples"
 } else {
-  message("Sample type not regognise. Please choose between: 'scRNA-seq', 'scATAC-se    q', 'samples', 'other' ")
+  message("Sample type not regognise. Please choose between: 'scRNA-seq', 'scATAC-seq', 'samples', 'other' ")
 }
 
 # -- Read files in fastq folder -- #
