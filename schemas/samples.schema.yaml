@@ -1,0 +1,24 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: A valid sample sheet. sample name column is validated by rule common
+
+properties:
+  primer:
+    type: string
+    minLength: 1
+  Date:
+    type: string
+    minLength: 1
+  ID:
+    type: string
+    minLength: 1
+  "Lab Register ID":
+    type: string
+    minLength: 1
+
+
+required:
+  - primer
+  - Date
+  - ID
+  - "Lab Register ID"

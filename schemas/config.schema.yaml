@@ -18,6 +18,7 @@ properties:
     type: string
   sample_type:
     type: string
+    enum: ["Multiome-GEX", "scRNA-seq", "multiome", "scATAC-seq", "other"]
 
 # entries that have to be in the config file for successful validation
 required:

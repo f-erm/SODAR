@@ -2,14 +2,24 @@ from snakemake.utils import validate
 from pathlib import Path
 import pandas as pd
 
-##### load config and sample sheets #####
+##### load and validate config and sample sheets #####
 
 configfile: "config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
 
-#samples = pd.read_csv(config["samples"], sep="\t").set_index("sample", drop=False)
-#samples.index.names = ["sample_id"]
-#validate(samples, schema="../schemas/samples.schema.yaml")
+samples = pd.read_csv(config["samples"], sep="\t").
+sample_type = df.columns[0]
+sample_type_config = config["sample_type"]
+
+if sample_type_config is "other":
+    sample_type_config = "samples"
+
+if sample_type is not sample_type_config:
+    raise ValueError(
+        f"Sample type of sample sheet '{sample_type}' does not match sample type of config file '{sample_type_config}"
+    )
+
+validate(samples, schema="../schemas/samples.schema.yaml")
 
 ##### print date and time #####
 

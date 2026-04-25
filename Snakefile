@@ -2,7 +2,7 @@
 # After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
 import pandas as pd
 
-report: "report/workflow.rst"
+# report: "report/workflow.rst"
 include: "rules/common.smk"
 # Variable declaration
 OUTDIR = config["out"]
@@ -22,8 +22,7 @@ rule all:
         # The first rule should define the default target files
         # Subsequent target rules can be specified below. They should start with all_*.
         expand("{OUTDIR}/{sample}.zip", sample = config['sample_id'], OUTDIR = OUTDIR), 
-        expand("{landing}/fastq/landing.finish", 
-                landing = config['landing_dir'], sample = config['sample_id'])
+        expand("{landing}/fastq/landing.finish", landing = config['landing_dir'])
 
 # Rule files
 include: "rules/text_files.smk"
