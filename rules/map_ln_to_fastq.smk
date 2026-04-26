@@ -46,5 +46,6 @@ rule make_input:
         cp {params.template} {params.out}/
         sed -i 's#/fast/home/projects/ludwig_cubi/fastq#{params.landing_dir}/fastq#g' {output.sh}
         sed -i 's#/fast/home/projects/ludwig_cubi/work#{params.landing_dir}#g' {output.sh}
+        touch {params.landing}/fastq/landing.finish #REMOVE THIS LATER!!!!
         """
 

@@ -8,6 +8,7 @@ sample_ID <- snakemake@params[["sample_id"]]
 out <- snakemake@params[["out"]]
 samples <- snakemake@params[["samples"]]
 input_format <- snakemake@params[["input_format"]]
+file_types <- snakemake@params[["file_types"]]
 sample_type <- snakemake@params[["sample_type"]]
 
 # -- Read samples file -- #
@@ -34,14 +35,30 @@ if (input_format == "folder") {
   selected_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
 } else if (input_format == "list") {
   selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
-} else if (input_format == "recursive") {
-  all_files <- list.files(path, pattern = "fastq\\.gz$", recursive = TRUE, full.names = TRUE)
-  selected_files <- all_files[!grepl("/catfiles/|$)", all_files)]
+} else if (input_format == "recursive") {#Get all files of specified types, regardless of subdir
+  selected_files <- list.files(path, pattern = paste0("\\.(", paste(file_types, collapse = "|"), ")$"), recursive = TRUE, full.names = FALSE)
+  file_names <- basename(selected_files)
+  if (length(selected_files) != length(unique(file_names))) {
+    warning("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
+  }
 } else {
   message("The input format wasn't recognised. Please choose between 'folder' or 'list'")
 }
 
-file_names <- unique(unlist(lapply(strsplit(selected_files,split="_S[0-9]"), "[", 1)))
+# --- Get name depending on naming scheme. Adjust this based on file type!!! --- #
+# Fastq
+fastq_files <- file_names[grep("\\.fastq$", file_names)]
+fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="_S[0-9]"), "[", 1)))
+# Some other file type
+# some_other_files <- ...
+
+file_names <- c(fastq_files) #, some_other_files)
+message("Vector contents: ", paste(your_vector, collapse = ", ")) #Remove later
+
+
+#use basename() to get unique names. 
+#This only works for fastq. idealy other naming schemes should work too.
+#file_names <- unique(unlist(lapply(strsplit(selected_files,split="_S[0-9]"), "[", 1)))
 message(paste0(length(file_names), " unique file names detected."))
 
 if(length(file_names) == dim(samples)[1]){
@@ -65,7 +82,7 @@ if(length(file_names) == dim(samples)[1]){
         message("Saving a and s files")
         message("Done! :)")
 } else {
-  warning("There is no agreement between the Nº of files detected sample.txt metadata. The list.files function might not be working properly?")
+  warning("There is no agreement between the Nº of files detected samples.txt metadata.")
   message("Detected file names: ", paste(file_names, collapse = ", "))
   message("Detected sample names: ", paste(samples[,pattern], collapse = ", "))
 }

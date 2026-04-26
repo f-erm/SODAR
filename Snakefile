@@ -27,4 +27,4 @@ rule all:
 # Rule files
 include: "rules/text_files.smk"
 include: "rules/map_ln_to_fastq.smk"
-include: "rules/landing_zone.smk"
+#include: "rules/landing_zone.smk"
