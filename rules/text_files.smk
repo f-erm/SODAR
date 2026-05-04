@@ -5,6 +5,7 @@ rule a_s_files:
     output:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
         s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id'])
+        csv=expand("{OUTDIR}/map_ln_to_fastq.csv", OUTDIR = OUTDIR)
     resources:
         mem_mb=get_resource("a_s_files", "mem_mb"),
         walltime=get_resource("a_s_files", "walltime")
@@ -25,7 +26,7 @@ rule a_s_files:
     threads:
         threads=get_resource("a_s_files", "threads")
     script:
-        "../scripts/a_s_file_generation.R"
+        "../scripts/file_generation.R"
 
 rule i_file:
     output:

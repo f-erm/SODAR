@@ -36,35 +36,39 @@ if (input_format == "folder") {
 } else if (input_format == "list") {
   selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
 } else if (input_format == "recursive") {#Get all files of specified types, regardless of subdir
+
   file_pattern = paste0("(", paste(file_types, collapse = "|"), ")$")
   selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, full.names = FALSE)
-  file_names <- basename(selected_files)
-  message("file names so far:", paste(file_names, collapse = ", ")) #Remove later
-  message("selected_files so far:", paste(selected_files, collapse = ", ")) #Remove later
-  if (length(selected_files) != length(unique(file_names))) {
+  if (length(selected_files) != length(unique(basename(selected_files)))) {
     warning("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
   }
+  file_names <- basename(selected_files)
 } else {
   message("The input format wasn't recognised. Please choose between 'folder' or 'list'")
 }
 
+
 # --- Get name depending on naming scheme. Adjust this based on file type!!! --- #
-# Fastq
-fastq_files <- file_names[grep("\\.fastq.gz$", file_names)]
-fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="\\.[0-9]"), "[", 1)))
-# TODO md5?
-# fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="_S[0-9]"), "[", 1)))
+#fastq
+fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]#aus mapln
+fastq_names <- basename(fastq)
+fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[", 1)))
+#fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]"), "[", 1)))
+#md5  
+md5 <- selected_files[grep("\\.md5$", selected_files)]
+md5_names <- basename(md5)
+md5_names <- unique(unlist(lapply(strsplit(md5_names,split="\\.[0-9]"), "[", 1)))
 # Some other file type
 # some_other_files <- ...
 
-file_names <- c(fastq_files) #, some_other_files)
-message("found files: ", paste(file_names, collapse = ", ")) #Remove later
+#kein md5 name? ja weil vergleich unten nicht mit md5 funktioniert.
+file_names <- c(fastq_names) #, some_other_files)
+file_paths <- c(fastq,md5) #, some_other_files)
 
+#----------------------------------------------------------------------------------#
 
-#use basename() to get unique names. 
-#This only works for fastq. idealy other naming schemes should work too.
-#file_names <- unique(unlist(lapply(strsplit(selected_files,split="_S[0-9]"), "[", 1)))
-message(paste0(length(file_names), " unique file names detected."))
+file_names <- unique(file_names)
+library_name <- fastq_names
 
 if(length(file_names) == dim(samples)[1]){
 	# -- Generate a file -- #
@@ -78,6 +82,7 @@ if(length(file_names) == dim(samples)[1]){
                 "Library Name" = file_names, check.names = FALSE)
 	write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", 
 		 quote = FALSE, row.names = FALSE)
+ 
 	# -- Generate s file -- #
 	message("Generating s file")
 	s <- data.frame("Source Name" = file_names,
@@ -85,10 +90,25 @@ if(length(file_names) == dim(samples)[1]){
 	write.table(s, file = file.path(out, paste0("s_", sample_ID, ".txt")), sep = "\t", 
 		quote = FALSE, row.names = FALSE)
         message("Saving a and s files")
-        message("Done! :)")
+  
+  # -- Generate csv dataframe -- #
+  map_In_to_fastq <- data.frame("#LibraryName" = file_paths,
+                              "FastqFilenameWithNoPath" = file_paths,
+                              check.names = FALSE)
+                          
+  #TODO Does this work for arbitrary naming scheme and md5?
+  for(name in library_name){
+    #map_In_to_fastq[grep(paste0(name, "_S"), fastq_files), "#LibraryName"] <- name
+    #map_In_to_fastq[grep(paste0(name, "\\.[0-9]"), file_paths), "#LibraryName"] <- name
+    map_In_to_fastq[grep(name, file_paths), "#LibraryName"] <- name
+  }
+  message("Saving map_ln_to_fastq file")                
+  write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
+            sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
+  
+  message("Done! :)")
 } else {
   warning("There is no agreement between the Nº of files detected samples.txt metadata.")
   message("Detected file names: ", paste(file_names, collapse = ", "))
   message("Detected sample names: ", paste(samples[,pattern], collapse = ", "))
 }
-
