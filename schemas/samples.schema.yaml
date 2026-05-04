@@ -4,13 +4,17 @@ description: A valid sample sheet. sample name column is validated by rule commo
 
 properties:
   primer:
-    type: string
-    minLength: 1
+    anyOf:
+      - type: string
+        minLength: 1
+      - enum: ["NA"]
   Date:
     type: string
     minLength: 1
   ID:
-    type: string
+    type: 
+      - string
+      - number
     minLength: 1
   "Lab Register ID":
     type: string

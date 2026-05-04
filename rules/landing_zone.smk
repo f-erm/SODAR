@@ -82,6 +82,7 @@ elif config["input_format"] in ["recursive"]:
             input_dir=config["input_dir"],
             input_format = config["input_format"],
             landing=config['landing_dir'],
+            file_types = config["file_types"]
         log:
             "{}/landing_exec.log".format(LOGDIR)
         benchmark:
@@ -91,10 +92,13 @@ elif config["input_format"] in ["recursive"]:
         shell:
             r"""
             mkdir -p {output.fastq}
-            # Copy all .fastq.gz files from any depth under input_dir
-            find {params.input_dir} -type f -name "*.fastq.gz" -exec cp {{}} {output.fastq} \;
+            # Copy all files of correct type from any depth under input_dir
+            for ft in {params.file_types}; do
+              find {params.input_dir} -type f -name "*$ft" -exec cp {{}} {output.fastq} \;
+            done
+            #find {params.input_dir} -type f -name "*.fastq.gz" -exec cp {{}} {output.fastq} \;
             mv {input.sh} {params.landing}/fastq
             mv {input.csv} {params.landing}/fastq
             bash {params.landing}/fastq/make_input.sh
             touch {params.landing}/fastq/landing.finish
-            """
+            #"""

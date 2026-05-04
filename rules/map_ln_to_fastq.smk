@@ -2,6 +2,7 @@ import glob
 import os
 
 rule map_In_to_fastq:
+#remove the second two line later and the komma
     output:
         csv=expand("{OUTDIR}/map_ln_to_fastq.csv", OUTDIR = OUTDIR)
     resources:    
@@ -12,7 +13,8 @@ rule map_In_to_fastq:
         input_dir = config["input_dir"],
         input_format = config["input_format"],
         sample_type = config["sample_type"],
-        out = config["out"]
+        out = config["out"],
+        file_types = config["file_types"]
     log:
         "{}/map_ln_to_fastq.log".format(LOGDIR)
     conda:
@@ -31,7 +33,8 @@ rule make_input:
         out = config["out"],
         sample_ID=config['sample_id'],
         template="resources/make_input.sh",
-        landing_dir=config['landing_dir']
+        landing_dir=config['landing_dir'],
+        file_types=" ".join(f'"{x}"' for x in config["file_types"])
     resources:
         mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime")
@@ -46,6 +49,8 @@ rule make_input:
         cp {params.template} {params.out}/
         sed -i 's#/fast/home/projects/ludwig_cubi/fastq#{params.landing_dir}/fastq#g' {output.sh}
         sed -i 's#/fast/home/projects/ludwig_cubi/work#{params.landing_dir}#g' {output.sh}
-        touch {params.landing}/fastq/landing.finish #REMOVE THIS LATER!!!!
+        sed -i "s#extensions=(.*)#extensions=({params.file_types})#g" {output.sh}
+        echo {params.file_types}
+        cat {output.sh}
         """
 

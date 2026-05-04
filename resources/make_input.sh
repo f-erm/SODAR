@@ -1,17 +1,41 @@
 #!/bin/bash
 
+# build input dir by creating softlinks and generating md5 if necessary
+
 path_to_fastq="/fast/home/projects/ludwig_cubi/fastq/"
 out="/fast/home/projects/ludwig_cubi/work/input/"
 path_to_csv="/fast/home/projects/ludwig_cubi/work/fastq/"
+extensions=("fastq.gz" "md5")
+echo "${extensions[@]}"
 
 mkdir -p $out
 cd $out
 while IFS=',' read library_name fastq
 do
-  md5sum $path_to_fastq$fastq > $path_to_fastq"$fastq".md5
-  mkdir -p $library_name/fastq
-  cd $library_name/fastq
-  ln -sF $path_to_fastq$fastq $fastq
-  ln -sF $path_to_fastq"$fastq".md5 "$fastq".md5
+  #Determine file type
+  fname=$(basename "$fastq")
+  extension=""
+  for ext in "${extensions[@]}"; do
+    if [[ "$fname" == *."$ext" ]]; then
+      extension="$ext"
+      break
+    fi
+  done
+  if [[ -z "$extension" ]]; then
+    echo "ERROR: Found file of invalid type. Something went wrong"
+    exit 1 
+  fi
+
+  #Put File in correct dir and generate md5 if necessary
+  mkdir -p $library_name/${extension}
+  # If MD5 does not exist already compute it
+  if [[ "$fname" != *.md5 && ! -f $path_to_fastq"$fname".md5 ]]; then
+    md5sum $path_to_fastq$fname > $path_to_fastq"$fname".md5
+    cd $library_name/${extension}
+    ln -sF $path_to_fastq"$fname".md5 "$fname".md5
+    cd ../..
+  fi
+  cd $library_name/${extension}
+  ln -sF $path_to_fastq$fname $fname
   cd $out
 done < $path_to_csv/map_ln_to_fastq.csv

@@ -7,16 +7,16 @@ import pandas as pd
 configfile: "config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
 
-samples = pd.read_csv(config["samples"], sep="\t").
-sample_type = df.columns[0]
+samples = pd.read_csv(config["samples"], sep="\t", encoding="latin1")
+sample_type = samples.columns[0]
 sample_type_config = config["sample_type"]
 
-if sample_type_config is "other":
+if sample_type_config == "other":
     sample_type_config = "samples"
 
-if sample_type is not sample_type_config:
+if sample_type != sample_type_config:
     raise ValueError(
-        f"Sample type of sample sheet '{sample_type}' does not match sample type of config file '{sample_type_config}"
+        f"Sample type of sample sheet '{sample_type}' does not match sample type of config file '{sample_type_config}'"
     )
 
 validate(samples, schema="../schemas/samples.schema.yaml")

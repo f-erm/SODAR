@@ -14,7 +14,8 @@ rule a_s_files:
         input_format = config["input_format"],
         sample_id = config["sample_id"],
         sample_type = config["sample_type"],
-        out = config["out"]
+        out = config["out"],
+        file_types = config["file_types"]
     log:
         "{}/a_s_files.log".format(LOGDIR)
     conda:

@@ -36,8 +36,11 @@ if (input_format == "folder") {
 } else if (input_format == "list") {
   selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
 } else if (input_format == "recursive") {#Get all files of specified types, regardless of subdir
-  selected_files <- list.files(path, pattern = paste0("\\.(", paste(file_types, collapse = "|"), ")$"), recursive = TRUE, full.names = FALSE)
+  file_pattern = paste0("(", paste(file_types, collapse = "|"), ")$")
+  selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, full.names = FALSE)
   file_names <- basename(selected_files)
+  message("file names so far:", paste(file_names, collapse = ", ")) #Remove later
+  message("selected_files so far:", paste(selected_files, collapse = ", ")) #Remove later
   if (length(selected_files) != length(unique(file_names))) {
     warning("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
   }
@@ -47,13 +50,15 @@ if (input_format == "folder") {
 
 # --- Get name depending on naming scheme. Adjust this based on file type!!! --- #
 # Fastq
-fastq_files <- file_names[grep("\\.fastq$", file_names)]
-fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="_S[0-9]"), "[", 1)))
+fastq_files <- file_names[grep("\\.fastq.gz$", file_names)]
+fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="\\.[0-9]"), "[", 1)))
+# TODO md5?
+# fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="_S[0-9]"), "[", 1)))
 # Some other file type
 # some_other_files <- ...
 
 file_names <- c(fastq_files) #, some_other_files)
-message("Vector contents: ", paste(your_vector, collapse = ", ")) #Remove later
+message("found files: ", paste(file_names, collapse = ", ")) #Remove later
 
 
 #use basename() to get unique names. 

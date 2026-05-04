@@ -37,9 +37,13 @@ if (input_format == "folder") {
   fastq_files <- list.files(path, pattern = "fastq.gz")
   library_name <- unique(unlist(lapply(strsplit(fastq_files, split="_S[0-9]"), "[", 1)))
 } else if (input_format == "recursive") {
-  selected_files <- list.files(path, pattern = paste0("\\.(", paste(file_types, collapse = "|"), ")$"), recursive = TRUE, full.names = FALSE)
-  fastq_files <- file_names[grep("\\.fastq$", selected_files)]
-  fastq_files <- unique(unlist(lapply(strsplit(fastq_files,split="_S[0-9]"), "[", 1)))
+  selected_files <- list.files(path, pattern = paste0("(", paste(file_types, collapse = "|"), ")$"), recursive = TRUE, full.names = FALSE)
+  fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]
+  md5 <- selected_files[grep("\\.md5$", selected_files)]
+  #library_name <- unique(unlist(lapply(strsplit(fastq_files,split="_S[0-9]"), "[", 1)))
+  library_name <- unique(unlist(lapply(strsplit(basename(fastq),split="\\.[0-9]"), "[", 1)))
+  fastq_files <- c(fastq,md5)
+  #TODO Add option for different fastq naming schemes
 } else {
   message("Ola, seniora, ké ase?")
 }
@@ -49,8 +53,11 @@ map_In_to_fastq <- data.frame("#LibraryName" = fastq_files,
                               "FastqFilenameWithNoPath" = fastq_files,
                               check.names = FALSE)
                           
+# TODO this only woeks for set fasq naming scheme
+# TODO make this work for md5 too
 for(name in library_name){
-  map_In_to_fastq[grep(paste0(name, "_S"), fastq_files), "#LibraryName"] <- name
+  #map_In_to_fastq[grep(paste0(name, "_S"), fastq_files), "#LibraryName"] <- name
+  map_In_to_fastq[grep(paste0(name, "\\.[0-9]"), fastq_files), "#LibraryName"] <- name
 }
 
 
