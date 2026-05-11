@@ -1,5 +1,0 @@
-samples	ID	Lab Register ID	Date	Total nM of Lib	Sample (µl)	EB buffer (µl)	Loading conc (nM)	Conc ratio to 10 nM	(11ul min) - Dilution	pooling	Loaded conc	~ Wanted M reads	M reads not normalized	Actual Reads (Normalized)	primer			
-MNV-010-04.1_PBMCs_mtscMultiome_circVDJ	1289	LR-20260319-1	18/03/2026	"174,00"	"1,00"	"19,00"	"8,70"	"0,87"	20	5	"1,38"	100	"55,2"	"100,7"	NA			
-MNV-013-CU-02.1_PBMCs_mtscMultiome_circVDJ	1290	LR-20260319-2	18.03.2026	119	"1,00"	"19,00"	"5,95"	"0,60"	20	"7,3"	"1,38"	100	"55,2"	"100,5"	NA			
-MNV-014-CU-01.1_PBMCs_mtscMultiome_circVDJ	1291	LR-20260319-3	18.03.2026	"85,8"	"1,00"	"19,00"	"4,29"	"0,43"	20	10	"1,36"	100	"54,5"	"99,3"	NA			
-MNV-012-02.1_PBMCs_mtscMultiome_circVDJ	1292	LR-20260319-4	18.03.2026	"93,5"	"1,00"	"19,00"	"4,68"	"0,47"	20	"9,2"	"1,37"	100	"54,6"	"99,5"	NA			
