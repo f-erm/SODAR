@@ -42,7 +42,7 @@ def create_project(name):
     data = {'title': name, 'type': 'PROJECT', 'parent':
             category_uuid, 'owner': user_uuid, 'public_access': None}
     project_data = requests.post(url, json=data, headers=project_headers).json()
-    project_uuid = project_data['sodar_uuid']
+    project_uuid = project_data.get('sodar_uuid')
     return(project_uuid)
 
 '''
@@ -58,7 +58,7 @@ print(update_project(project_uuid,data))
 
 def upload_samplesheet(sheet_path,project_uuid):
     url = f'{sodar_url}/samplesheets/api/import/{project_uuid}'
-    file_name = path.split("/")[-1]
+    file_name = sheet_path.split("/")[-1]
     files = {'file': (file_name, open(sheet_path, 'rb'), 'application/zip')}
     response = requests.post(url, files=files, headers=sheet_headers)
     return(response.json())
@@ -99,16 +99,18 @@ INPUT = os.path.join(out, "landing", "input")
 SHEET_PATH = os.path.join(out, f'{NAME}.zip')
 
 project_uuid = create_project(NAME)
-print(f'Created project "{NAME}". Make sure to visit\nhttps://sodar.bihealth.org/project/update/{project_uuid}\nand uncheck "Notify members of landing zone uploads"' )
-upload_samplesheet(sheet_path,project_uuid)
-assay_uuid = get_assay_uuid(project_uuid)
-create_IRODS_collection(project_uuid)
-zone_uuid = create_landing_zone(project_uuid,assay_uuid)
-while (get_landing_zone_info(zone_uuid,'status') != 'ACTIVE'):
-    sleep(1)
-IRODS_PATH = get_landing_zone_info(zone_uuid,'irods_path')
-print('Landing zone created. To start uploading type the following command (Make sure you have authenticated via iinit before):')
-print(f'irsync -r -a -K {INPUT} {IRODS_PATH}')
-
+if project_uuid is not None:
+    print(f'Created project "{NAME}". Make sure to visit\nhttps://sodar.bihealth.org/project/update/{project_uuid}\nand uncheck "Notify members of landing zone uploads"' )
+    upload_samplesheet(SHEET_PATH,project_uuid)
+    assay_uuid = get_assay_uuid(project_uuid)
+    create_IRODS_collection(project_uuid)
+    zone_uuid = create_landing_zone(project_uuid,assay_uuid)
+    while (get_landing_zone_info(zone_uuid,'status') != 'ACTIVE'):
+        sleep(1)
+    IRODS_PATH = get_landing_zone_info(zone_uuid,'irods_path')
+    print('Landing zone created. To start uploading type the following command (Make sure you have authenticated via iinit before):')
+    print(f'irsync -r -a -K {INPUT} {IRODS_PATH}')
+else:
+    print('Failed to create Project. Check if your login credentials are valid.')
 
 
