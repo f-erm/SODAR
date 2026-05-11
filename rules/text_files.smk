@@ -12,7 +12,6 @@ rule a_s_files:
     params:
         samples = config["samples"],
         input_dir = config["input_dir"],
-        input_format = config["input_format"],
         sample_id = config["sample_id"],
         sample_type = config["sample_type"],
         out = config["out"],

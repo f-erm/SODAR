@@ -7,7 +7,6 @@ path <- snakemake@params[["input_dir"]]
 sample_ID <- snakemake@params[["sample_id"]]
 out <- snakemake@params[["out"]]
 samples <- snakemake@params[["samples"]]
-input_format <- snakemake@params[["input_format"]]
 file_types <- snakemake@params[["file_types"]]
 sample_type <- snakemake@params[["sample_type"]]
 
@@ -36,7 +35,6 @@ if (input_format == "folder") {
 } else if (input_format == "list") {
   selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
 } else if (input_format == "recursive") {#Get all files of specified types, regardless of subdir
-
   file_pattern = paste0("(", paste(file_types, collapse = "|"), ")$")
   selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, full.names = FALSE)
   if (length(selected_files) != length(unique(basename(selected_files)))) {
@@ -54,15 +52,17 @@ fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]#aus mapln
 fastq_names <- basename(fastq)
 fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[", 1)))
 #fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]"), "[", 1)))
+
 #md5  
 md5 <- selected_files[grep("\\.md5$", selected_files)]
 md5_names <- basename(md5)
 md5_names <- unique(unlist(lapply(strsplit(md5_names,split="\\.[0-9]"), "[", 1)))
+
 # Some other file type
 # some_other_files <- ...
+# some_other_files_names <- ...
 
-#kein md5 name? ja weil vergleich unten nicht mit md5 funktioniert.
-file_names <- c(fastq_names) #, some_other_files)
+file_names <- c(fastq_names,md5_names) #, some_other_files)
 file_paths <- c(fastq,md5) #, some_other_files)
 
 #----------------------------------------------------------------------------------#
