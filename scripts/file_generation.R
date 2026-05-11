@@ -32,8 +32,10 @@ message("Obtaining file names")
 file_pattern = paste0("(", paste(file_types, collapse = "|"), ")$")
 selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, full.names = FALSE)
 if (length(selected_files) != length(unique(basename(selected_files)))) {
-  warning("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
+ stop("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
 }
+sample_order <- sapply(selected_files, function(s) { which(sapply(samples[,pattern], grepl, x = s))})
+selected_files <- selected_files[order(sample_order)] #order files by occurence in sample table
 file_names <- basename(selected_files)
 
 

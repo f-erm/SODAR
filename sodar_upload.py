@@ -95,7 +95,7 @@ with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 out = config["out"]
 NAME = config["sample_id"]
-INPUT = os.path.join(out, "landing", "input")
+INPUT = os.path.join(os.path.dirname(out), "landing", "input")
 SHEET_PATH = os.path.join(out, f'{NAME}.zip')
 
 project_uuid = create_project(NAME)
@@ -109,7 +109,7 @@ if project_uuid is not None:
         sleep(1)
     IRODS_PATH = get_landing_zone_info(zone_uuid,'irods_path')
     print('Landing zone created. To start uploading type the following command (Make sure you have authenticated via iinit before):')
-    print(f'irsync -r -a -K {INPUT} {IRODS_PATH}')
+    print(f'irsync -r -a -K {INPUT} i:{IRODS_PATH}')
 else:
     print('Failed to create Project. Check if your login credentials are valid.')
 
