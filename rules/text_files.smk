@@ -4,7 +4,7 @@ import os
 rule a_s_files:
     output:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
-        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id'])
+        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
         csv=expand("{OUTDIR}/map_ln_to_fastq.csv", OUTDIR = OUTDIR)
     resources:
         mem_mb=get_resource("a_s_files", "mem_mb"),

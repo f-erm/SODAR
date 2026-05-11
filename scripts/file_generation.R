@@ -28,22 +28,13 @@ if (sample_type == "scRNA-seq"){
 }
 
 # -- Obtain file names -- #
- message("Obtaining file names")
-if (input_format == "folder") {
-  selected_folders <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
-  selected_files <- unlist(lapply(selected_folders, function(x) list.files(file.path(path, x), pattern = "fastq.gz")))
-} else if (input_format == "list") {
-  selected_files <- unlist(lapply(samples[,pattern], function(x) list.files(path, paste(x,"_",sep=""))))
-} else if (input_format == "recursive") {#Get all files of specified types, regardless of subdir
-  file_pattern = paste0("(", paste(file_types, collapse = "|"), ")$")
-  selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, full.names = FALSE)
-  if (length(selected_files) != length(unique(basename(selected_files)))) {
-    warning("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
-  }
-  file_names <- basename(selected_files)
-} else {
-  message("The input format wasn't recognised. Please choose between 'folder' or 'list'")
+message("Obtaining file names")
+file_pattern = paste0("(", paste(file_types, collapse = "|"), ")$")
+selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, full.names = FALSE)
+if (length(selected_files) != length(unique(basename(selected_files)))) {
+  warning("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
 }
+file_names <- basename(selected_files)
 
 
 # --- Get name depending on naming scheme. Adjust this based on file type!!! --- #

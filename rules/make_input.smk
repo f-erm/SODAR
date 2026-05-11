@@ -26,7 +26,5 @@ rule make_input:
         sed -i 's#/fast/home/projects/ludwig_cubi/fastq#{params.landing_dir}/fastq#g' {output.sh}
         sed -i 's#/fast/home/projects/ludwig_cubi/work#{params.landing_dir}#g' {output.sh}
         sed -i "s#extensions=(.*)#extensions=({params.file_types})#g" {output.sh}
-        echo {params.file_types}
-        cat {output.sh}
         """
 
