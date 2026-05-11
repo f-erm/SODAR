@@ -100,7 +100,7 @@ SHEET_PATH = os.path.join(out, f'{NAME}.zip')
 
 project_uuid = create_project(NAME)
 print(f'Created project "{NAME}". Make sure to visit\nhttps://sodar.bihealth.org/project/update/{project_uuid}\nand uncheck "Notify members of landing zone uploads"' )
-upload_samplesheet(sheet_path,project_uuid):
+upload_samplesheet(sheet_path,project_uuid)
 assay_uuid = get_assay_uuid(project_uuid)
 create_IRODS_collection(project_uuid)
 zone_uuid = create_landing_zone(project_uuid,assay_uuid)
