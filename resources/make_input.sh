@@ -28,7 +28,8 @@ do
   #Put File in correct dir and generate md5 if necessary
   mkdir -p $library_name/${extension}
   # If MD5 does not exist already compute it
-  if [[ -f $path_to_fastq"$fname".md5 ]]; then
+  if [[! -f $path_to_fastq"$fname".md5 ]]; then
+    echo "Generating missing md5 for $fname"
     md5sum $path_to_fastq$fname > $path_to_fastq"$fname".md5
   fi
   ln -sF $path_to_fastq"$fname".md5 $library_name/${extension}/"$fname".md5
