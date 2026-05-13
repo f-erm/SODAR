@@ -12,7 +12,6 @@ input_dir: "/data/gpfs-1/groups/ag_ludwig/work/P1812_20221228/demuxed"
 sample_id: "P1812"
 file_types:
     - "fastq.gz"
-    - "md5"
 
 # -- Landing zone parameters -- #
 landing_dir: "/data/gpfs-1/projects/ludwig_cubi/work"

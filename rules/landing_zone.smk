@@ -30,7 +30,7 @@ rule execute_landing:
         for ft in {params.file_types}; do
             find {params.input_dir} -type f -name "*$ft" -exec cp {{}} {output.fastq} \;
         done
-        #find {params.input_dir} -type f -name "*.fastq.gz" -exec cp {{}} {output.fastq} \;
+        find {params.input_dir} -type f -name "*.md5" -exec cp {{}} {output.fastq} \;
         mv {input.sh} {params.landing}/fastq
         mv {input.csv} {params.landing}/fastq
         bash {params.landing}/fastq/make_input.sh

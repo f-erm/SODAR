@@ -41,22 +41,18 @@ file_names <- basename(selected_files)
 
 # --- Get name depending on naming scheme. Adjust this based on file type!!! --- #
 #fastq
-fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]#aus mapln
+fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]
 fastq_names <- basename(fastq)
 fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[", 1)))
 #fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]"), "[", 1)))
 
-#md5  
-md5 <- selected_files[grep("\\.md5$", selected_files)]
-md5_names <- basename(md5)
-md5_names <- unique(unlist(lapply(strsplit(md5_names,split="\\.[0-9]"), "[", 1)))
-
 # Some other file type
 # some_other_files <- ...
-# some_other_files_names <- ...
+# some_other_files_names <- basename(some_other_files)
+# some_other_files_names <- ...Filename adjustment depending on naming scheme
 
-file_names <- c(fastq_names,md5_names) #, some_other_files)
-file_paths <- c(fastq,md5) #, some_other_files)
+file_names <- c(fastq_names) #, some_other_files)
+file_paths <- c(fastq) #, some_other_files)
 
 #----------------------------------------------------------------------------------#
 
@@ -89,10 +85,7 @@ if(length(file_names) == dim(samples)[1]){
                               "FastqFilenameWithNoPath" = file_paths,
                               check.names = FALSE)
                           
-  #TODO Does this work for arbitrary naming scheme and md5?
   for(name in library_name){
-    #map_In_to_fastq[grep(paste0(name, "_S"), fastq_files), "#LibraryName"] <- name
-    #map_In_to_fastq[grep(paste0(name, "\\.[0-9]"), file_paths), "#LibraryName"] <- name
     map_In_to_fastq[grep(name, file_paths), "#LibraryName"] <- name
   }
   message("Saving map_ln_to_fastq file")                
