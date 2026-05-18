@@ -1,7 +1,7 @@
 import glob
 import os
 
-rule a_s_files:
+rule a_s_csv_files:
     output:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
         s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),

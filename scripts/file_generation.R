@@ -12,7 +12,8 @@ sample_type <- snakemake@params[["sample_type"]]
 
 # -- Read samples file -- #
 message("Reading samples.tsv")
-samples <- read.table(samples, sep = "\t", header = T,  check.names=FALSE)
+samples <- read.table(samples, sep = "\t", header = T,  check.names=FALSE )
+rownames(samples) <- samples[[1]]
 
 # -- Select technology type -- #
 if (sample_type == "scRNA-seq"){
@@ -34,10 +35,15 @@ selected_files <- list.files(path, pattern = file_pattern, recursive = TRUE, ful
 if (length(selected_files) != length(unique(basename(selected_files)))) {
  stop("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
 }
-sample_order <- sapply(selected_files, function(s) { which(sapply(samples[,pattern], grepl, x = s))})
-selected_files <- selected_files[order(sample_order)] #order files by occurence in sample table
-file_names <- basename(selected_files)
 
+####
+# get all sampels with fixed location
+locations <- samples[,location]
+locations_exist <- !is.na(locations) & locations != ""
+# Filter out files with fixed location
+selected_files <- Filter(function(f) #TODO this doesnt work if locations is goven absolute and not relative to sample dir
+  !any(grepl(paste0("/", locations[locations_exist], "/"),f)),selected_files)
+####
 
 # --- Get name depending on naming scheme. Adjust this based on file type!!! --- #
 #fastq
@@ -54,10 +60,41 @@ fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[",
 file_names <- c(fastq_names) #, some_other_files)
 file_paths <- c(fastq) #, some_other_files)
 
+file_names <- unique(file_names)
 #----------------------------------------------------------------------------------#
 
-file_names <- unique(file_names)
-library_name <- fastq_names
+
+##### Moved down
+#Reorder files by occurence in sample table
+#sample_order <- sapply(selected_files, function(s) { which(sapply(samples[,pattern], grepl, x = s))})
+#selected_files <- selected_files[order(sample_order)] #order files by occurence in sample table
+#library_name <- fastq_names
+######
+
+#New sorting
+f_n <- character(0)
+f_p <- character(0)
+l_n <- character(0)
+for (sample in samples[,pattern]){
+  loc <- samples[sample,location]
+  if (!is.na(loc) && loc != ""){
+    f_n <- c(f_n, sample)
+    f_p <- c(f_p, loc)
+    l_n <- c(l_n, sample)    
+  }else{
+    n <- file_names[grepl(sample, file_names,  fixed = TRUE)]
+    f <- selected_files[grepl(sample, selected_files,  fixed = TRUE)]
+    f_n <- c(f_n, n)
+    f_p <- c(f_p, matching_files)
+    l_n <- c(l_n, rep(n, length(f)))
+  }
+}
+file_names <- f_n
+file_paths <- f_p
+library_name <- l_n
+
+
+
 
 if(length(file_names) == dim(samples)[1]){
 	# -- Generate a file -- #
@@ -71,7 +108,9 @@ if(length(file_names) == dim(samples)[1]){
                 "Library Name" = file_names, check.names = FALSE)
 	write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", 
 		 quote = FALSE, row.names = FALSE)
- 
+
+
+
 	# -- Generate s file -- #
 	message("Generating s file")
 	s <- data.frame("Source Name" = file_names,
