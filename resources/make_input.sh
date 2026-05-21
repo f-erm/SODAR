@@ -9,6 +9,8 @@ extensions=("fastq.gz")
 
 mkdir -p $out
 cd $out
+
+# Create Softlinks for samples with unspecified location
 while IFS=',' read library_name fastq
 do
   #Determine file type
@@ -25,13 +27,27 @@ do
     exit 1 
   fi
 
-  #Put File in correct dir and generate md5 if necessary
+  #Put file (and md5 if present) in correct dir
   mkdir -p $library_name/${extension}
-  # If MD5 does not exist already compute it
-  if [[! -f $path_to_fastq"$fname".md5 ]]; then
-    echo "Generating missing md5 for $fname"
-    md5sum $path_to_fastq$fname > $path_to_fastq"$fname".md5
+  if [[ -f $path_to_fastq"$fname".md5 ]]; then
+    ln -sF $path_to_fastq"$fname".md5 $library_name/${extension}/"$fname".md5
   fi
-  ln -sF $path_to_fastq"$fname".md5 $library_name/${extension}/"$fname".md5
   ln -sF $path_to_fastq$fname $library_name/${extension}/"$fname"
 done < $path_to_csv/map_ln_to_fastq.csv
+
+# Create softlinks for all samples with specified location
+while IFS=',' read sample_name path
+do
+  ln -sF $path_to_fastq/"$sample_name" $sample_name
+done < $path_to_csv/map_locations.csv
+
+#Generate all missing md5
+find -L . -type f ! -name "*.md5" -exec bash -c '
+for f do
+  md5file="${f}.md5"
+  if [ ! -f "$md5file" ]; then
+    echo "generating $md5file"
+    md5sum "$f" > "$md5file"
+  fi
+done
+' bash {} +

@@ -5,7 +5,8 @@ rule a_s_csv_files:
     output:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
         s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
-        csv=expand("{OUTDIR}/map_ln_to_fastq.csv", OUTDIR = OUTDIR)
+        csv=expand("{OUTDIR}/map_ln_to_fastq.csv", OUTDIR = OUTDIR),
+        csv_locations=expand("{OUTDIR}/map_locations.csv", OUTDIR = OUTDIR)
     resources:
         mem_mb=get_resource("a_s_files", "mem_mb"),
         walltime=get_resource("a_s_files", "walltime")

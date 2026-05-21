@@ -36,14 +36,18 @@ if (length(selected_files) != length(unique(basename(selected_files)))) {
  stop("There are duplicate file names in different subdirectories. File names need to be unique regardless of subdirectory")
 }
 
-####
-# get all sampels with fixed location
-locations <- samples[,location]
+# -- Get all samples with fixed location and filter them out -- #
+if ("location" %in% names(samples)) {
+  locations <- samples[,"location"]
+}else{
+  locations <- rep(NA, nrow(samples))
+  samples[["location"]] <- locations
+}
 locations_exist <- !is.na(locations) & locations != ""
-# Filter out files with fixed location
-selected_files <- Filter(function(f) #TODO this doesnt work if locations is goven absolute and not relative to sample dir
+selected_files <- Filter(function(f) #locations need to be given relative to sample dir
   !any(grepl(paste0("/", locations[locations_exist], "/"),f)),selected_files)
-####
+
+
 
 # --- Get name depending on naming scheme. Adjust this based on file type!!! --- #
 #fastq
@@ -64,38 +68,25 @@ file_names <- unique(file_names)
 #----------------------------------------------------------------------------------#
 
 
-##### Moved down
-#Reorder files by occurence in sample table
-#sample_order <- sapply(selected_files, function(s) { which(sapply(samples[,pattern], grepl, x = s))})
-#selected_files <- selected_files[order(sample_order)] #order files by occurence in sample table
-#library_name <- fastq_names
-######
 
-#New sorting
+# -- Sorting files according to samples
 f_n <- character(0)
 f_p <- character(0)
-l_n <- character(0)
 for (sample in samples[,pattern]){
-  loc <- samples[sample,location]
+  loc <- samples[sample,"location"]
   if (!is.na(loc) && loc != ""){
     f_n <- c(f_n, sample)
-    f_p <- c(f_p, loc)
-    l_n <- c(l_n, sample)    
   }else{
     n <- file_names[grepl(sample, file_names,  fixed = TRUE)]
-    f <- selected_files[grepl(sample, selected_files,  fixed = TRUE)]
+    f <- file_paths[grepl(sample, file_paths,  fixed = TRUE)]
     f_n <- c(f_n, n)
-    f_p <- c(f_p, matching_files)
-    l_n <- c(l_n, rep(n, length(f)))
+    f_p <- c(f_p, f)
   }
 }
 file_names <- f_n
 file_paths <- f_p
-library_name <- l_n
 
-
-
-
+# -- Generating all Files -- #
 if(length(file_names) == dim(samples)[1]){
 	# -- Generate a file -- #
 	message("Generating a file")
@@ -109,8 +100,6 @@ if(length(file_names) == dim(samples)[1]){
 	write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", 
 		 quote = FALSE, row.names = FALSE)
 
-
-
 	# -- Generate s file -- #
 	message("Generating s file")
 	s <- data.frame("Source Name" = file_names,
@@ -120,16 +109,26 @@ if(length(file_names) == dim(samples)[1]){
         message("Saving a and s files")
   
   # -- Generate csv dataframe -- #
-  map_In_to_fastq <- data.frame("#LibraryName" = file_paths,
+  map_In_to_fastq <- data.frame("LibraryName" = file_paths,
                               "FastqFilenameWithNoPath" = file_paths,
                               check.names = FALSE)
-                          
-  for(name in library_name){
-    map_In_to_fastq[grep(name, file_paths), "#LibraryName"] <- name
+  for(name in file_names){
+    map_In_to_fastq[grep(name, file_paths), "LibraryName"] <- name
   }
-  message("Saving map_ln_to_fastq file")                
+  message("Saving map_ln_to_fastq file")       
   write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
             sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
+  
+  # -- Generate locations dataframe -- #
+  map_locations <- data.frame("SampleName" = samples[locations_exist,pattern],
+                                "Location" = samples[locations_exist,"location"],
+                                check.names = FALSE)
+  if (any(locations_exist)){
+    map_locations$SampleName <- paste0(sample_ID,'_',map_locations$SampleName)
+  }
+  message("Saving map_locations file")                
+  write.table(map_locations, file = file.path(out, "map_locations.csv"),
+              sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
   
   message("Done! :)")
 } else {
