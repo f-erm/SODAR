@@ -22,10 +22,12 @@ if (sample_type == "scRNA-seq"){
   pattern <- 'scATAC-seq samples'
 } else if(sample_type == "Multiome-GEX"){
   pattern <- "Multiome-GEX samples"
+} else if(sample_type == "Long_read"){
+  pattern <- "Long_read"
 } else if (sample_type %in% c("multiome", "scenith", "other")){
   pattern <- "samples"
 } else {
-  message("Sample type not regognise. Please choose between: 'scRNA-seq', 'scATAC-seq', 'samples', 'other'")
+  message("Sample type not regognised. Please choose between: 'scRNA-seq', 'scATAC-seq', 'samples', 'other'")
 }
 
 # -- Obtain file names -- #
