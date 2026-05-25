@@ -19,7 +19,10 @@ if sample_type != sample_type_config:
         f"Sample type of sample sheet '{sample_type}' does not match sample type of config file '{sample_type_config}'"
     )
 
-validate(samples, schema="../schemas/samples.schema.yaml")
+if sample_type_config == "PacBio":  
+    validate(samples, schema="../schemas/samples_pacbio.schema.yaml")
+else:
+    validate(samples, schema="../schemas/samples.schema.yaml")
 
 ##### print date and time #####
 

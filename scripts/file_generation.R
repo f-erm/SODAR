@@ -16,18 +16,19 @@ samples <- read.table(samples, sep = "\t", header = T,  check.names=FALSE )
 rownames(samples) <- samples[[1]]
 
 # -- Select technology type -- #
-if (sample_type == "scRNA-seq"){
-  pattern <- "scRNA-seq samples"
-} else if (sample_type == "scATAC-seq"){
-  pattern <- 'scATAC-seq samples'
-} else if(sample_type == "Multiome-GEX"){
-  pattern <- "Multiome-GEX samples"
-} else if(sample_type == "Long_read"){
-  pattern <- "Long_read"
-} else if (sample_type %in% c("multiome", "scenith", "other")){
-  pattern <- "samples"
-} else {
-  message("Sample type not regognised. Please choose between: 'scRNA-seq', 'scATAC-seq', 'samples', 'other'")
+patterns <- list(
+  "scRNA-seq" = "scRNA-seq samples",
+  "scATAC-seq" = "scATAC-seq samples",
+  "Multiome-GEX" = "Multiome-GEX samples",
+  "multiome" = "samples",
+  "scenith" = "samples",
+  "PacBio" = "Long_read",
+  "other" = "samples"
+)
+
+pattern <- patterns[[sample_type]]
+if (is.null(pattern)) {
+  message("Sample type not recognised. Choose between: ", paste(names(patterns), collapse = ", "))
 }
 
 # -- Obtain file names -- #
@@ -99,6 +100,15 @@ if(length(file_names) == dim(samples)[1]){
                 "Parameter Value[Prep Date]" = samples$ 'Date',
                 "Parameter Value[Barcode Name]" = samples$ 'primer',
                 "Library Name" = file_names, check.names = FALSE)
+
+  if (sample_type == "PacBio"){
+    if ("Genomics Core ID" %in% names(samples)) a$"Parameter Value[Genomics Core ID]" <- samples$ 'Genomics Core ID'
+    if ("Segmented reads ID" %in% names(samples)) a$"Parameter Value[Segmented reads ID]" <- samples$ 'Segmented reads ID'
+    if ("Singlecell-isoseq ID" %in% names(samples)) a$"Parameter Value[Singlecell-isoseq ID]" <- samples$ 'Singlecell-isoseq ID'
+  }else{
+    a$"Parameter Value[Barcode Name]"  <- samples$ 'primer'
+  }
+
 	write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", 
 		 quote = FALSE, row.names = FALSE)
 

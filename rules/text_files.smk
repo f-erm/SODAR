@@ -34,6 +34,11 @@ rule i_file:
     params:
         sample_ID=config['sample_id'],
         template="resources/i_Investigation.txt"
+        template = (
+            "resources/i_Investigation_pacbio.txt"
+            if config["sample_type"] == "PacBio"
+            else "resources/i_Investigation.txt"
+        )
     resources:
         mem_mb=get_resource("i_file", "mem_mb"),
         walltime=get_resource("i_file", "walltime")
