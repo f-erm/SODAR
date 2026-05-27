@@ -1,20 +1,22 @@
 import glob
 import os
 
-rule a_s_files:
+rule a_s_csv_files:
     output:
         a=expand("{OUTDIR}/a_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
-        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id'])
+        s=expand("{OUTDIR}/s_{id}.txt", OUTDIR = OUTDIR, id = config['sample_id']),
+        csv=expand("{OUTDIR}/map_ln_to_fastq.csv", OUTDIR = OUTDIR),
+        csv_locations=expand("{OUTDIR}/map_locations.csv", OUTDIR = OUTDIR)
     resources:
         mem_mb=get_resource("a_s_files", "mem_mb"),
         walltime=get_resource("a_s_files", "walltime")
     params:
         samples = config["samples"],
         input_dir = config["input_dir"],
-        input_format = config["input_format"],
         sample_id = config["sample_id"],
         sample_type = config["sample_type"],
-        out = config["out"]
+        out = config["out"],
+        file_types = config["file_types"]
     log:
         "{}/a_s_files.log".format(LOGDIR)
     conda:
@@ -24,14 +26,18 @@ rule a_s_files:
     threads:
         threads=get_resource("a_s_files", "threads")
     script:
-        "../scripts/a_s_file_generation.R"
+        "../scripts/file_generation.R"
 
 rule i_file:
     output:
         i="{}/i_Investigation.txt".format(OUTDIR)
     params:
         sample_ID=config['sample_id'],
-        template="resources/i_Investigation.txt"
+        template = (
+            "resources/i_Investigation_pacbio.txt"
+            if config["sample_type"] == "PacBio"
+            else "resources/i_Investigation.txt"
+        )
     resources:
         mem_mb=get_resource("i_file", "mem_mb"),
         walltime=get_resource("i_file", "walltime")

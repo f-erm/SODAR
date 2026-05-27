@@ -16,8 +16,13 @@ properties:
     type: string
   sample_id:
     type: string
+  file_types:
+    type: array
+    items:
+      type: string    
   sample_type:
     type: string
+    enum: ["Multiome-GEX", "scRNA-seq", "multiome", "scATAC-seq", "PacBio", "other"]
 
 # entries that have to be in the config file for successful validation
 required:
@@ -26,4 +31,5 @@ required:
   - log
   - input_dir
   - sample_id
+  - file_types
   - sample_type

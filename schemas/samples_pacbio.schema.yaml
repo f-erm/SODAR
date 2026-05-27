@@ -1,0 +1,42 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: A valid sample sheet. sample name column is validated by rule common
+
+properties:
+  Date:
+    type: string
+    minLength: 1
+  ID:
+    type: 
+      - string
+      - number
+    minLength: 1
+  "Lab Register ID":
+    type: string
+    minLength: 1
+  "Genomics Core ID":
+    type: 
+      - string
+      - number
+    minLength: 1
+  "Segmented reads ID":
+    type: 
+      - string
+      - number
+    minLength: 1
+  "Singlecell-isoseq ID":
+    type: 
+      - string
+      - number
+    minLength: 1
+
+required:
+  - Date
+  - ID
+  - "Lab Register ID"
+
+anyOf:
+  - required: ["Genomics Core ID"]
+  - required: ["Segmented reads ID"]
+  - required: ["Singlecell-isoseq ID"]
+

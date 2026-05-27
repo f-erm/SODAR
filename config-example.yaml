@@ -1,6 +1,4 @@
 # It should be complemented by a samples.tsv file that contains one row per sample.
-# The units.tsv file should contain the location of each project folder
-# (containing fastq files).
 
 # -- Samples configuration -- #
 samples: "samples.tsv"
@@ -10,10 +8,12 @@ log: "/data/gpfs-1/users/cofu10_c/scratch/P1812_SODAR/log"
 # -- Read input parameters -- #
 input_dir: "/data/gpfs-1/groups/ag_ludwig/work/P1812_20221228/demuxed"
 sample_id: "P1812"
+file_types:
+    - "fastq.gz"
+    - "md5"
 
 # -- Landing zone parameters -- #
 landing_dir: "/data/gpfs-1/projects/ludwig_cubi/work"
-input_format: "folder" # choose between "folder" or "list"
 sample_type: "Multiome-GEX" # choose between "Multiome-GEX", "scRNA-seq" #"multiome", "scATAC-seq" 
 
 # -- Resources configuration -- #
@@ -27,3 +27,4 @@ resources:
         memb_mb: 120000
         walltime: 1140
 
+        
