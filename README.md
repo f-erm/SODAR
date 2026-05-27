@@ -5,18 +5,31 @@ This snakemake pipeline aims at facilitating the uploading of samples to the **S
 
 ## Authors
 
-* Coral Fustero-Torre
+* Original author: Coral Fustero-Torre
+* Fork modifications: Ferdinand Ermel
+
+## Changes
+This fork adds the following features:
+- Extend support from fastq.gz files to files of arbitrary file type 
+- Support for different technology types, e.g PacBio instead of Illumina
+- Allow for files in arbitrary depth, replacing the previous "list/folder" option
+- Add python script to automatically handle SODAR project creation and file upload
+- Allow for individual samples to be given by designated location
+- Automatic validation of sample sheets
+- Centralised file name adjustements, simplifying adaptation to unseen naming schemes 
+- Confirm if MD5s already exist and only compute if not already present
+- Minor bug fixes
 
 ## Setup
 
-For setting up the pipeline, three configuration files need to be modified. See the *Usage* section for more details.
+For setting up the pipeline, two configuration files need to be modified. See the *Usage* section for more details.
 
 ### Configuration files
 
 * **config.yaml** contains all pipeline parameters.
 * **samples.tsv**: contains metadata annotations. An example file can be downloaded, have in mind not all columns will be necessary.
 
-# Usage
+## Usage
 
 ### 1. Set up the environment
 
@@ -49,6 +62,9 @@ This is the pipeline configuration file, where you can tune all the available pa
 | **input_dir**        	| Path to FASTQ file folder    |
 | **sample_id**        	| Sample unique identifier    |
 | **landing_dir**        	| Path to landing directory  |
+| **file_types**        	| List of all file types you want to upload  |
+| **sample_type**        	| Choose from available sample types  |
+
 
 #### **c. samples.tsv**
 
@@ -61,6 +77,8 @@ An example file ([samples-example.tsv)](https://github.com/cfusterot/SODAR/blob/
 * Date
 * primer
 
+For PacBio files different attributes are required, compared to the above. See the samples_pacbio.schema.yaml schema for required attributes.
+
 ### 4. Run the pipeline.
 
 Once the pipeline is configured and conda environments are created, the user just needs to run i**SODAR** as follows:
@@ -70,3 +88,27 @@ Once the pipeline is configured and conda environments are created, the user jus
 The mandatory arguments are:
 * **--use-conda**: to install and use the conda environemnts.
 * **-j**: number of threads/jobs provided to snakemake.
+
+
+## Adjustments and other usefull things 
+
+### Technology platform 
+To upload PacBio files set 'sample_type' to 'PacBio'. To implement other technology platforms, follow these 3 steps:
+1) Create a new i_investigation.txt file with corresponding info. Link it in rule 'i_file'
+2) Create a new samples schema for validation. Link it in rule 'common'
+3) Adjust generation of 'a' file in file_generation.R, to make use of your technology platforms paramters
+
+### File selection
+By default, this pipeline scans the directory given in 'input_dir' for all files matching one of the given file types (e.g 'fastq.gz'). These are then matched by name to their respective sample, given in the samples.txt. 
+
+Sometimes, files might not follow a set naming scheme, making it difficult to match files to their respective sample. For each file type you have listed in config.yaml, you'll need to specify how to match files of this type to their respective sample name. This is done in the specified section of the file_generation.R script. 
+
+If you want to exclude files from the initial scan, simply rename them to some file type not given in config.yaml (e.g rename exlcude_this_file.fastq.gz to exlcude_this_file.fastq.gz.no).
+
+Sometimes it is easier to just specify a certain folder, containing all files for a specifc sample. For example, you're sample might consist of many different file types and adding them all to the config file will take too long. In this case, simply add a column named 'location' to your 'samples.txt'. For each sample you want to upload this way, add the name of the respective folder, relative to the input directory, to the location column. Files uploaded this way, do not need to match their respective samples name. 
+
+Important: Files not contained in one of the specified locations need to have unique names!!
+
+### Sodar upload script
+
+This fork adds a small script, which creates the new SODAR project. Run it directly after the pipeline finishes. The required info will be taken from config.yaml. To use this script, just add your SODAR credentials at the designated spot. 

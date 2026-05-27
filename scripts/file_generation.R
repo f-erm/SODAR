@@ -1,6 +1,7 @@
 # Description: This script generates the a, i and s files necessary for uploading samples to the SODAR platforms
-# Author: Coral Fustero-Torre
-# email: coral.fustero@bih-charite.de
+# Original author: Coral Fustero-Torre
+# Original author email: coral.fustero@bih-charite.de
+# Fork modifications: Ferdinand Ermel
 
 # -- Read input parameters -- #
 path <- snakemake@params[["input_dir"]]
