@@ -11,18 +11,10 @@ samples = pd.read_csv(config["samples"], sep="\t", encoding="latin1")
 sample_type = samples.columns[0]
 sample_type_config = config["sample_type"]
 
-if sample_type_config == "other":
-    sample_type_config = "samples"
-
-if sample_type != sample_type_config:
-    raise ValueError(
-        f"Sample type of sample sheet '{sample_type}' does not match sample type of config file '{sample_type_config}'"
-    )
-
 if sample_type_config == "PacBio":  
-    validate(samples, schema="../schemas/samples_pacbio.schema.yaml")
+  validate(samples, schema="../schemas/samples_pacbio.schema.yaml")
 else:
-    validate(samples, schema="../schemas/samples.schema.yaml")
+  validate(samples, schema="../schemas/samples.schema.yaml")
 
 ##### print date and time #####
 

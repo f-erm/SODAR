@@ -98,8 +98,7 @@ if(length(file_names) == dim(samples)[1]){
                 "Parameter Value[Library ID]" = samples$ 'ID',
                 "Parameter Value[Labregister Item ID]" = samples$ 'Lab Register ID',
                 "Parameter Value[Prep Date]" = samples$ 'Date',
-                "Parameter Value[Barcode Name]" = samples$ 'primer',
-                "Library Name" = file_names, check.names = FALSE)
+                check.names = FALSE)
 
   if (sample_type == "PacBio"){
     if ("Genomics Core ID" %in% names(samples)) a$"Parameter Value[Genomics Core ID]" <- samples$ 'Genomics Core ID'
@@ -108,6 +107,8 @@ if(length(file_names) == dim(samples)[1]){
   }else{
     a$"Parameter Value[Barcode Name]"  <- samples$ 'primer'
   }
+
+  a$"Library Name" <- file_names
 
 	write.table(a, file = file.path(out, paste0("a_", sample_ID, ".txt")), sep = "\t", 
 		 quote = FALSE, row.names = FALSE)

@@ -33,7 +33,6 @@ rule i_file:
         i="{}/i_Investigation.txt".format(OUTDIR)
     params:
         sample_ID=config['sample_id'],
-        template="resources/i_Investigation.txt"
         template = (
             "resources/i_Investigation_pacbio.txt"
             if config["sample_type"] == "PacBio"
