@@ -74,9 +74,9 @@ Study Protocol Type Term Source REF
 Study Protocol Description	
 Study Protocol URI	
 Study Protocol Version	
-Study Protocol Parameters Name	Library ID;Labregister Item ID;Prep Date;Barcode Name;Sequencing Run
-Study Protocol Parameters Name Term Accession Number	;;;;
-Study Protocol Parameters Name Term Source REF	;;;;
+Study Protocol Parameters Name	Library ID;Labregister Item ID;Prep Date;Genomics Core ID;Segmented reads ID;Singlecell-isoseq ID;Sequencing Run
+Study Protocol Parameters Name Term Accession Number	;;;;;;
+Study Protocol Parameters Name Term Source REF	;;;;;;
 Study Protocol Components Name	
 Study Protocol Components Type	
 Study Protocol Components Type Term Accession Number	

@@ -15,13 +15,19 @@ properties:
     type: string
     minLength: 1
   "Genomics Core ID":
-    type: string
+    type: 
+      - string
+      - number
     minLength: 1
   "Segmented reads ID":
-    type: string
+    type: 
+      - string
+      - number
     minLength: 1
   "Singlecell-isoseq ID":
-    type: string
+    type: 
+      - string
+      - number
     minLength: 1
 
 required:
