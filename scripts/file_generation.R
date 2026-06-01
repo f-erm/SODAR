@@ -79,7 +79,7 @@ f_p <- character(0)
 for (sample in samples[,pattern]){
   loc <- samples[sample,"location"]
   if (!is.na(loc) && loc != ""){
-    f_n <- c(f_n, sample)
+    f_n <- c(f_n, paste0(sample_ID,'_',sample))
   }else{
     n <- file_names[grepl(sample, file_names,  fixed = TRUE)]
     f <- file_paths[grepl(sample, file_paths,  fixed = TRUE)]
@@ -134,12 +134,9 @@ if(length(file_names) == dim(samples)[1]){
             sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
   
   # -- Generate locations dataframe -- #
-  map_locations <- data.frame("SampleName" = samples[locations_exist,pattern],
+  map_locations <- data.frame("SampleName" = file_names[locations_exist],
                                 "Location" = samples[locations_exist,"location"],
                                 check.names = FALSE)
-  if (any(locations_exist)){
-    map_locations$SampleName <- paste0(sample_ID,'_',map_locations$SampleName)
-  }
   message("Saving map_locations file")                
   write.table(map_locations, file = file.path(out, "map_locations.csv"),
               sep=",", quote = FALSE, row.names = FALSE, col.names=FALSE)
