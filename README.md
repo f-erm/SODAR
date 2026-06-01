@@ -27,7 +27,7 @@ For setting up the pipeline, two configuration files need to be modified. See th
 ### Configuration files
 
 * **config.yaml** contains all pipeline parameters.
-* **samples.tsv**: contains metadata annotations. An example file can be downloaded, have in mind not all columns will be necessary.
+* **samples.tsv/txt**: contains metadata annotations. An example file is part of the repo. Keep in mind not all columns will be necessary.
 
 ## Usage
 
@@ -43,7 +43,7 @@ To run the pipeline, the user needs to create the conda environments first, whic
 ### 2. Download the **SODAR** repository from Github.
 Use git clone command to create a local copy.
 
-    git clone https://github.com/cfusterot/SODAR.git
+    git clone https://github.com/f-erm/SODAR.git
 
 ### 3. Configure the pipeline.
 
@@ -51,7 +51,7 @@ Before executing the pipeline, the users must configure it according to their sa
 
 #### **a. config.yaml**
 
-This is the pipeline configuration file, where you can tune all the available parameters to customise the uploading of the samples. An example file ([config-example.yaml)](https://github.com/cfusterot/SODAR/blob/main/config-example.yaml) is included in the repository. Rename it to `config.yaml` and edit its contents.
+This is the pipeline configuration file, where you can tune all the available parameters to customise the uploading of the samples. An example file ([config-example.yaml)](https://github.com/f-erm/SODAR/blob/main/config-example.yaml) is included in the repository. Rename it to `config.yaml` and edit its contents.
 
 
 | **Field name** 	| **Description**                  |
@@ -70,14 +70,14 @@ This is the pipeline configuration file, where you can tune all the available pa
 
 This table contains the name of each sample and the experimental condition it belongs to.
 
-An example file ([samples-example.tsv)](https://github.com/cfusterot/SODAR/blob/main/samples-example.tsv) is included in the repository. Rename it to `samples.tsv` and edit its contents. Mandatory columns include:
-* scATAC-seq samples
+An example file ([samples-example.tsv)](https://github.com/f-erm/SODAR/blob/main/samples-example.tsv) is included in the repository. Rename it to `samples.tsv` and edit its contents. Mandatory columns include:
+* "scATAC-seq samples" or some other supported sample type 
 * ID
 * Lab Register ID
 * Date
 * primer
 
-For PacBio files different attributes are required, compared to the above. See the samples_pacbio.schema.yaml schema for required attributes.
+For PacBio files different columns are required. See the samples_pacbio.schema.yaml schema for required columns.
 
 ### 4. Run the pipeline.
 
@@ -93,7 +93,9 @@ The mandatory arguments are:
 ## Adjustments and other usefull things 
 
 ### Technology platform 
-To upload PacBio files set 'sample_type' to 'PacBio'. To implement other technology platforms, follow these 3 steps:
+To upload PacBio files set 'sample_type' to 'PacBio'. Inside your samples.txt, the first column should be named 'Long_read'. PacBio files are usually matched to their corresponding sample by folder and not by file name. See the next section on how to match folders to samples via the 'location' column. 
+
+To implement other technology platforms, follow these 3 steps:
 1) Create a new i_investigation.txt file with corresponding info. Link it in rule 'i_file'
 2) Create a new samples schema for validation. Link it in rule 'common'
 3) Adjust generation of 'a' file in file_generation.R, to make use of your technology platforms paramters
@@ -111,4 +113,4 @@ Important: Files not contained in one of the specified locations need to have un
 
 ### Sodar upload script
 
-This fork adds a small script, which creates the new SODAR project. Run it directly after the pipeline finishes. The required info will be taken from config.yaml. To use this script, just add your SODAR credentials at the designated spot. 
+This fork adds a small script, which creates the new SODAR project and landing zone. Run it directly after the pipeline finishes. The required info will be taken from config.yaml. To use this script, just add your SODAR credentials at the designated spot. 

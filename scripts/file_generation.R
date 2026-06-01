@@ -57,8 +57,8 @@ selected_files <- Filter(function(f) #locations need to be given relative to sam
 #fastq
 fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]
 fastq_names <- basename(fastq)
-fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[", 1)))
-#fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]"), "[", 1)))
+#fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[", 1)))
+fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]"), "[", 1)))
 
 # Some other file type
 # some_other_files <- ...
