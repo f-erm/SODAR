@@ -18,6 +18,7 @@ This fork adds the following features:
 - Automatic validation of sample sheets
 - Centralised file name adjustements, simplifying adaptation to unseen naming schemes 
 - Confirm if MD5s already exist and only compute if not already present
+- Add slurm script to run the pipeline
 - Minor bug fixes
 
 ## Setup
@@ -90,7 +91,7 @@ The mandatory arguments are:
 * **-j**: number of threads/jobs provided to snakemake.
 
 
-## Adjustments and other usefull things 
+## Adjustments and file selection
 
 ### Technology platform 
 To upload PacBio files set 'sample_type' to 'PacBio'. Inside your samples.txt, the first column should be named 'Long_read'. PacBio files are usually matched to their corresponding sample by folder and not by file name. See the next section on how to match folders to samples via the 'location' column. 
@@ -111,6 +112,12 @@ Sometimes it is easier to just specify a certain folder, containing all files fo
 
 Important: Files not contained in one of the specified locations need to have unique names!!
 
+## Quality of life improvements
+
 ### Sodar upload script
 
-This fork adds a small script, which creates the new SODAR project and landing zone. Run it directly after the pipeline finishes. The required info will be taken from config.yaml. To use this script, just add your SODAR credentials at the designated spot. 
+This fork adds a small script, which creates the new SODAR project and landing zone. Run it directly after the pipeline finishes. The required info will be taken from config.yaml. To use this script, just add your SODAR credentials at the designated spot.
+
+### Slurm script
+
+This fork adds a small script to run this pipeline via slurm, without the need for e.g a screen session. Just adjust the __submit_snakemake.sh__ and follow the given instructions.

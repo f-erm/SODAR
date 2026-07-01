@@ -24,7 +24,7 @@ resources:
         walltime: 480
     landing:
         threads: 4
-        memb_mb: 120000
+        mem_mb: 120000
         walltime: 1140
 
         
