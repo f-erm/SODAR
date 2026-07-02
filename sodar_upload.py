@@ -20,7 +20,20 @@ zone_headers = {**auth_header, 'Accept': 'application/vnd.bihealth.sodar.landing
 
 
 
+
+
 ### Wrappers
+
+def set_project_settings(project_uuid, plugin_name, setting_name, value):
+    url = f'{sodar_url}/project/api/settings/set/{project_uuid}'
+    params = {'plugin_name' : plugin_name,
+             'setting_name' : setting_name,
+             'value' : value} 
+    result = requests.post(url, headers=project_headers, json = params).json()
+    return result
+
+def disable_notification(project_uuid):
+    set_project_settings(project_uuid, 'landingzones' , 'member_notify_move', False)
 
 def get_project_uuid_from_fullpath(path):
     return path.strip("/").split("/")[3]
@@ -44,17 +57,6 @@ def create_project(name):
     project_data = requests.post(url, json=data, headers=project_headers).json()
     project_uuid = project_data.get('sodar_uuid')
     return(project_uuid)
-
-'''
-#This does not work as of now!
-def update_project(project_uuid,data):
-    url = f'{sodar_url}/project/api/settings/set/{project_uuid}'
-    response = requests.post(url, json=data, headers=project_headers).json()
-    return(response)
-data = {'plugin_name' : 'projectroles', 'setting_name'
-        : 'notify_email_project', 'value': False }
-print(update_project(project_uuid,data))
-'''
 
 def upload_samplesheet(sheet_path,project_uuid):
     url = f'{sodar_url}/samplesheets/api/import/{project_uuid}'
@@ -95,12 +97,14 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     out = config["out"]
     NAME = config["sample_id"]
+    UPLOAD = config["upload_to_sodar"]
     INPUT = os.path.join(os.path.dirname(out), "landing", "input")
     SHEET_PATH = os.path.join(out, f'{NAME}.zip')
 
     project_uuid = create_project(NAME)
     if project_uuid is not None:
-        print(f'Created project "{NAME}". Make sure to visit\nhttps://sodar.bihealth.org/project/update/{project_uuid}\nand uncheck "Notify members of landing zone uploads"' )
+        print(f'Created project "{NAME}"under\nhttps://sodar.bihealth.org/project/{project_uuid}\n')
+        disable_notification(project_uuid)
         upload_samplesheet(SHEET_PATH,project_uuid)
         assay_uuid = get_assay_uuid(project_uuid)
         create_IRODS_collection(project_uuid)
@@ -108,8 +112,12 @@ if __name__ == "__main__":
         while (get_landing_zone_info(zone_uuid,'status') != 'ACTIVE'):
             sleep(1)
         IRODS_PATH = get_landing_zone_info(zone_uuid,'irods_path')
-        print('Landing zone created. To start uploading type the following command (Make sure you have authenticated via iinit before):')
-        print(f'irsync -r -a -K {INPUT} i:{IRODS_PATH}')
+        if UPLOAD:
+            with open({os.path.join(os.path.dirname(out), "landing", "fastq", "irods.txt")},"w") as f:
+                f.write(f'irsync -r -a -K {INPUT} i:{IRODS_PATH}')
+        else:
+            print('Landing zone created. To start uploading type the following command (Make sure you have authenticated via iinit before):')
+            print(f'irsync -r -a -K {INPUT} i:{IRODS_PATH}')
     else:
         print('Failed to create Project. Check if your login credentials are valid.')
 

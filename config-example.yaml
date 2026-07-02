@@ -15,6 +15,7 @@ file_types:
 # -- Landing zone parameters -- #
 landing_dir: "/data/gpfs-1/projects/ludwig_cubi/work"
 sample_type: "Multiome-GEX" # choose between "Multiome-GEX", "scRNA-seq" #"multiome", "scATAC-seq" 
+upload_to_sodar: false # Run upload script
 
 # -- Resources configuration -- #
 resources:
@@ -25,6 +26,10 @@ resources:
     landing:
         threads: 4
         mem_mb: 120000
+        walltime: 1140
+    upload:
+        threads: 4
+        mem_mb: 12000
         walltime: 1140
 
         
