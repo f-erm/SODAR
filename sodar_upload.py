@@ -1,25 +1,33 @@
+'''
+USAGE: Creates SODAR project and landing zone based on your current config.yaml
+SODAR credentials need to be added below.
+Also prints the command to start uploading files to landing zone.
+If some Path is given as first argument, upload command will instead be saved to file "irods.txt" at given path
+'''
+
 import requests
 import os
 import yaml
+import sys
 from time import sleep
 
-### Authorization. Directly from Sodar documentation ###
+
+### Authorization. Enter your SODAR credentials here:
 
 sodar_url = 'https://sodar.bihealth.org/' 
 user_uuid = '' # Your user UUID: See the User Profile in top right corner
 api_token = '' # Your API token: Create in SODAR in top right corner settings
 category_uuid = '' # Your Lab: On SODAR select you lab category and copy uuid from url
 
-# Headers for requests (Don't touch this):
+
+### Headers for requests (Don't touch this):
+
 auth_header = {'Authorization': 'token {}'.format(api_token)}
 # Use project_headers for project management API endpoints
 project_headers = {**auth_header, 'Accept': 'application/vnd.bihealth.sodar-core.projectroles+json; version=2.0'}
 # Use the following headers for sample sheet and landing zone API endpoints
 sheet_headers = {**auth_header, 'Accept': 'application/vnd.bihealth.sodar.samplesheets+json; version=1.2'}
 zone_headers = {**auth_header, 'Accept': 'application/vnd.bihealth.sodar.landingzones+json; version=1.1'}
-
-
-
 
 
 ### Wrappers
@@ -97,7 +105,6 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     out = config["out"]
     NAME = config["sample_id"]
-    UPLOAD = config["upload_to_sodar"]
     INPUT = os.path.join(os.path.dirname(out), "landing", "input")
     SHEET_PATH = os.path.join(out, f'{NAME}.zip')
 
@@ -112,8 +119,8 @@ if __name__ == "__main__":
         while (get_landing_zone_info(zone_uuid,'status') != 'ACTIVE'):
             sleep(1)
         IRODS_PATH = get_landing_zone_info(zone_uuid,'irods_path')
-        if UPLOAD:
-            with open({os.path.join(os.path.dirname(out), "landing", "fastq", "irods.txt")},"w") as f:
+        if len(sys.argv) > 1:
+            with open(os.path.join(sys.argv[1], "irods.txt"),"w") as f:
                 f.write(f'irsync -r -a -K {INPUT} i:{IRODS_PATH}')
         else:
             print('Landing zone created. To start uploading type the following command (Make sure you have authenticated via iinit before):')

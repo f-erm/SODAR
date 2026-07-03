@@ -18,15 +18,25 @@ def get_resource(rule,resource):
         return config["resources"]["default"][resource]
 
 # Final output 
+all_inputs = [
+    expand("{OUTDIR}/{sample}.zip",
+           sample=config["sample_id"],
+           OUTDIR=OUTDIR),
+    expand("{landing}/fastq/landing.finish",
+           landing=config["landing_dir"]),
+]
+
+if UPLOAD:
+    all_inputs.extend([
+        expand("{landing}/irods.txt",
+               landing=config["landing_dir"]),
+        expand("{landing}/sodar_upload.finish",
+               landing=config["landing_dir"]),
+    ])
+
 rule all:
     input:
-        # The first rule should define the default target files
-        # Subsequent target rules can be specified below. They should start with all_*.
-        expand("{OUTDIR}/{sample}.zip", sample = config['sample_id'], OUTDIR = OUTDIR), 
-        expand("{landing}/fastq/landing.finish", landing = config['landing_dir'])
-        if UPLOAD:
-            expand("{landing}/fastq/irods.txt", landing = config['landing_dir'])
-            expand("{landing}/fastq/sodar_upload.finish", landing = config['landing_dir'])
+        all_inputs
 
 # Rule files
 include: "rules/text_files.smk"

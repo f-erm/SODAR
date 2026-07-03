@@ -116,7 +116,7 @@ Important: Files not contained in one of the specified locations need to have un
 
 ### Sodar upload script
 
-This fork adds a small script, which creates the new SODAR project and landing zone. Run it directly after the pipeline finishes. The required info will be taken from config.yaml. To use this script, just add your SODAR credentials at the designated spot.
+This fork adds a small script, which creates the new SODAR project and landing zone and already provides the irods command to start uploading files. All relevant config is taken from config.yaml . You can run the script by itself or by setting the "upload_to_sodar" config option to true. The later will run the script as part of the pipeline and also start the file uploading.
 
 ### Slurm script
 

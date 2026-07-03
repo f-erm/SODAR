@@ -5,13 +5,11 @@ import os
 
 rule sodar_creation:
     input:
-        landing_finish = "{}/landing.finish".format(config['landing_dir'])
+        landing_finish = "{}/fastq/landing.finish".format(config['landing_dir'])
     output:
-        irods_script= expand("{landing}/fastq/irods.txt", landing = config['landing_dir'])
+        irods_script= expand("{landing}/irods.txt", landing = config['landing_dir'])
     params:
-        out = config["out"],
         sample_ID=config['sample_id'],
-        template="resources/make_input.sh",
         landing_dir=config['landing_dir'],
     resources:
         mem_mb=get_resource("default", "mem_mb"),
@@ -24,18 +22,16 @@ rule sodar_creation:
         threads=get_resource("default", "threads")
     shell:
         """
-        python3 sodar_upload.py
+        python3 sodar_upload.py {params.landing_dir}
         """
 
-rule sodar_creation:
+rule sodar_upload:
     input:
-        irods_script= expand("{landing}/fastq/irods.txt", landing=config['landing_dir']) 
+        irods_script= expand("{landing}/irods.txt", landing=config['landing_dir']) 
     output:
-        sh= expand("{landing}/fastq/sodar_upload.finish", landing = config['landing_dir'])
+        upload_finish= expand("{landing}/sodar_upload.finish", landing = config['landing_dir'])
     params:
-        out = config["out"],
         sample_ID=config['sample_id'],
-        template="resources/make_input.sh",
         landing_dir=config['landing_dir'],
     resources:
         mem_mb=get_resource("upload", "mem_mb"),
@@ -48,6 +44,6 @@ rule sodar_creation:
         threads=get_resource("upload", "threads")
     shell:
         """
-        bash {irods}
-        touch {params.landing_dir}/fastq/sodar_upload.finish
+        bash {input.irods_script}
+        touch {params.landing_dir}/sodar_upload.finish
         """
