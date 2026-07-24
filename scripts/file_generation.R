@@ -57,8 +57,7 @@ selected_files <- Filter(function(f) #locations need to be given relative to sam
 #fastq
 fastq <- selected_files[grep("\\.fastq.gz$", selected_files)]
 fastq_names <- basename(fastq)
-#fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="\\.[0-9]"), "[", 1)))
-fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]"), "[", 1)))
+fastq_names <- unique(unlist(lapply(strsplit(fastq_names,split="_S[0-9]+"), "[", 1)))
 
 # Some other file type
 # some_other_files <- ...
@@ -81,8 +80,8 @@ for (sample in samples[,pattern]){
   if (!is.na(loc) && loc != ""){
     f_n <- c(f_n, paste0(sample_ID,'_',sample))
   }else{
-    n <- file_names[grepl(sample, file_names,  fixed = TRUE)]
-    f <- file_paths[grepl(sample, file_paths,  fixed = TRUE)]
+    n <- file_names[grepl(paste0(sample, "$"), file_names)]
+    f <- file_paths[grepl(paste0(sample, "_S[0-9]+"), file_paths)]
     f_n <- c(f_n, n)
     f_p <- c(f_p, f)
   }
@@ -127,7 +126,7 @@ if(length(file_names) == dim(samples)[1]){
                               "FastqFilenameWithNoPath" = file_paths,
                               check.names = FALSE)
   for(name in file_names){
-    map_In_to_fastq[grep(name, file_paths), "LibraryName"] <- name
+    map_In_to_fastq[grep(paste0(name,'_'), file_paths), "LibraryName"] <- name #The '_' here is a workaround to prevent e.g XXX.fastq and XXXY.fastq being matched to the same sample. This case requires a seperator of '_' in the file name and should be adjusted in the future
   }
   message("Saving map_ln_to_fastq file")       
   write.table(map_In_to_fastq, file = file.path(out, "map_ln_to_fastq.csv"),
@@ -144,6 +143,11 @@ if(length(file_names) == dim(samples)[1]){
   message("Done! :)")
 } else {
   warning("There is no agreement between the Nº of files detected samples.txt metadata.")
-  message("Detected file names: ", paste(file_names, collapse = ", "))
-  message("Detected sample names: ", paste(samples[,pattern], collapse = ", "))
+  message("Detected ", length(file_names)," file names: ", paste(file_names, collapse = ", "))
+  message("Detected ", length(samples[,pattern])," sample names: ", paste(samples[,pattern], collapse = ", "))
+  for (fn in samples[,pattern]){
+    if (length(grep(fn, file_names)) == 0){
+      message("Found no files for: ", fn)
+    }
+  }
 }
